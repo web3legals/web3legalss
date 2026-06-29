@@ -1,368 +1,1097 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Web3Legals CMS</title>
-<meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="../css/style.css">
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web3Legals CMS</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 <style>
-body{background:var(--black)}
-.cms-sidebar{width:240px;background:var(--black-soft);border-right:1px solid var(--black-border);height:100vh;position:fixed;top:0;left:0;padding:1.5rem;z-index:100;overflow-y:auto}
-.cms-main{margin-left:240px;padding:2rem;min-height:100vh}
-.cms-nav-item{display:block;padding:0.6rem 0.9rem;border-radius:var(--radius);color:var(--white-muted);font-size:0.875rem;cursor:pointer;transition:all var(--transition);margin-bottom:0.25rem;border:none;background:none;width:100%;text-align:left}
-.cms-nav-item:hover,.cms-nav-item.active{background:var(--gold-muted);color:var(--gold)}
-.cms-nav-section{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white-muted);margin:1.25rem 0 0.5rem;padding-left:0.9rem;display:block}
-.post-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius);margin-bottom:0.75rem;transition:all var(--transition)}
-.post-row:hover{border-color:var(--gold-dark)}
-.secret-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius);margin-bottom:0.75rem}
-.secret-val{font-family:var(--font-mono);font-size:0.8rem;color:var(--gold);background:var(--black);padding:0.25rem 0.5rem;border-radius:2px;flex:1;word-break:break-all}
-.tag-pill{font-family:var(--font-mono);font-size:0.65rem;background:var(--gold-muted);border:1px solid var(--gold-dark);color:var(--gold);padding:0.2rem 0.5rem;border-radius:2px;white-space:nowrap}
-.status-pill{font-size:0.65rem;padding:0.2rem 0.5rem;border-radius:2px;white-space:nowrap;font-family:var(--font-mono)}
-.s-published{background:rgba(39,174,96,0.15);border:1px solid rgba(39,174,96,0.3);color:#2ecc71}
-.s-draft{background:rgba(100,100,100,0.15);border:1px solid #444;color:#888}
-.s-scheduled{background:rgba(52,152,219,0.15);border:1px solid rgba(52,152,219,0.3);color:#3498db}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;overflow-y:auto;padding:2rem 1rem}
-.modal-overlay.open{display:block}
-.modal-box{max-width:700px;margin:0 auto;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:2.5rem;position:relative}
-.modal-box.wide{max-width:860px}
-.itabs{display:flex;border-bottom:1px solid var(--black-border);margin-bottom:1.5rem;gap:0}
-.itab{padding:0.55rem 1rem;font-size:0.8rem;cursor:pointer;border:none;background:none;color:var(--white-muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all var(--transition)}
-.itab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.ipanel{display:none}.ipanel.active{display:block}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
-.char-c{font-size:0.7rem;text-align:right;margin-top:0.2rem;color:var(--white-muted)}
-.char-c.warn{color:#e67e22}.char-c.over{color:#e74c3c}
-.seo-bar{height:6px;border-radius:3px;background:var(--black-border);margin-bottom:0.5rem;overflow:hidden}
-.seo-fill{height:100%;border-radius:3px;transition:width 0.4s}
-.seo-item{display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;font-size:0.78rem;border-bottom:1px solid var(--black-border)}
-.seo-item:last-child{border-bottom:none}
-.seo-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.d-green{background:#2ecc71}.d-red{background:#e74c3c}
-.serp{max-width:480px;padding:1rem;background:var(--black);border:1px solid var(--black-border);border-radius:var(--radius);margin-bottom:1rem}
-.serp-url{font-size:0.75rem;color:#4caf50;margin-bottom:0.15rem}
-.serp-title{font-size:1rem;color:#8ab4f8;margin-bottom:0.25rem}
-.serp-desc{font-size:0.8rem;color:#aaa;line-height:1.5}
-.og-wrap{border:1px solid var(--black-border);border-radius:var(--radius);overflow:hidden;max-width:400px;margin-top:0.5rem}
-.og-img{height:90px;background:var(--black-soft);display:flex;align-items:center;justify-content:center;color:var(--white-muted);font-size:0.8rem}
-.og-body{padding:0.6rem;background:#1e1e1e}
-.og-domain{font-size:0.68rem;color:#888;margin-bottom:0.1rem}
-.og-title{font-size:0.82rem;font-weight:600;color:#eee;margin-bottom:0.1rem}
-.og-desc{font-size:0.72rem;color:#999}
-.schema-out{background:var(--black);border:1px solid var(--black-border);border-radius:var(--radius);padding:0.75rem;font-family:var(--font-mono);font-size:0.7rem;color:#82c1ff;white-space:pre-wrap;max-height:150px;overflow-y:auto;margin-top:0.5rem}
-.upload-zone{border:2px dashed var(--black-border);border-radius:var(--radius);padding:1.5rem;text-align:center;cursor:pointer;transition:all var(--transition);margin-bottom:1rem}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--gold);background:var(--gold-muted)}
-.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.6rem;margin-top:1rem}
-.media-item{background:var(--black);border:1px solid var(--black-border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color var(--transition)}
-.media-item:hover{border-color:var(--gold-dark)}
-.media-item.sel{border-color:var(--gold)}
-.media-thumb{width:100%;aspect-ratio:1;object-fit:cover;display:block}
-.media-icon{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:1.75rem;background:var(--black-soft)}
-.media-name{font-size:0.62rem;padding:0.25rem 0.35rem;color:var(--white-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.attach-item{display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0.5rem;background:var(--black);border-radius:var(--radius);margin-bottom:0.3rem;font-size:0.78rem}
-.as-dot{width:6px;height:6px;border-radius:50%;background:#555;display:inline-block;margin-right:4px;transition:background 0.3s}
-.as-dot.saving{background:#e67e22}.as-dot.saved{background:#2ecc71}
-.filter-bar{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
-.search-in{background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius);color:var(--white);padding:0.5rem 0.75rem;font-size:0.82rem;flex:1;min-width:160px}
-.search-in:focus{outline:none;border-color:var(--gold-dark)}
-.redir-row{display:flex;align-items:center;gap:0.5rem;padding:0.7rem 1rem;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius);margin-bottom:0.4rem;font-size:0.8rem}
-.ql-container{background:var(--black)!important;border:1px solid var(--black-border)!important;border-top:none!important;border-radius:0 0 var(--radius) var(--radius);color:var(--white);min-height:180px}
-.ql-toolbar{background:var(--black-soft)!important;border:1px solid var(--black-border)!important;border-radius:var(--radius) var(--radius) 0 0}
-.ql-toolbar .ql-stroke{stroke:#888!important}
-.ql-toolbar button:hover .ql-stroke,.ql-toolbar .ql-active .ql-stroke{stroke:var(--gold)!important}
-.ql-toolbar .ql-picker-label{color:#888!important}
-.ql-editor{min-height:180px;color:var(--white)!important}
-@media(max-width:768px){.cms-sidebar{display:none}.cms-main{margin-left:0}.g2,.g3{grid-template-columns:1fr}}
+/* ═══════════════════════════════════════════════
+   W3L CMS — DESIGN TOKENS
+═══════════════════════════════════════════════ */
+:root {
+  --bg:          #0a0a0b;
+  --bg-soft:     #0f0f11;
+  --bg-card:     #141416;
+  --bg-hover:    #1a1a1d;
+  --border:      #1f1f24;
+  --border-gold: rgba(212,175,55,0.25);
+  --gold:        #D4AF37;
+  --gold-bright: #F0D060;
+  --gold-muted:  rgba(212,175,55,0.1);
+  --gold-dark:   rgba(212,175,55,0.4);
+  --white:       #f0f0f2;
+  --white-muted: #6b6b76;
+  --white-dim:   #9a9aa6;
+  --red:         #e74c3c;
+  --red-muted:   rgba(231,76,60,0.12);
+  --green:       #2ecc71;
+  --green-muted: rgba(46,204,113,0.12);
+  --blue:        #3498db;
+  --blue-muted:  rgba(52,152,219,0.12);
+  --radius-sm:   6px;
+  --radius:      10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --transition:  0.18s ease;
+  --sidebar-w:   248px;
+  --font-body:   'Inter', system-ui, sans-serif;
+  --font-display:'Syne', system-ui, sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+  --shadow:      0 4px 24px rgba(0,0,0,0.4);
+  --shadow-gold: 0 0 20px rgba(212,175,55,0.15);
+}
+
+/* ═══ RESET & BASE ═══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+h1,h2,h3,h4,h5 { font-family: var(--font-display); line-height: 1.25; }
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* ═══ LOGIN SCREEN ═══ */
+#loginScreen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 1.5rem;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212,175,55,0.08) 0%, transparent 70%);
+}
+.login-card {
+  width: 100%; max-width: 400px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow), var(--shadow-gold);
+}
+.login-logo {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #b8960a, var(--gold));
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 0.75rem; font-weight: 800;
+  color: #000; margin: 0 auto 1.25rem; letter-spacing: 0.05em;
+}
+.login-title { text-align: center; font-size: 1.5rem; font-weight: 700; color: var(--white); margin-bottom: 0.35rem; }
+.login-sub { text-align: center; font-size: 0.8rem; color: var(--white-muted); margin-bottom: 2rem; }
+.login-err { color: var(--red); font-size: 0.82rem; text-align: center; margin-top: 0.75rem; display: none; }
+.login-footer { font-size: 0.72rem; text-align: center; color: var(--white-muted); margin-top: 1.5rem; }
+
+/* ═══ FORM ELEMENTS ═══ */
+.form-group { margin-bottom: 1rem; }
+.form-label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--white-dim); margin-bottom: 0.45rem; letter-spacing: 0.02em; }
+.form-input, .form-textarea, .form-select {
+  width: 100%; background: var(--bg-soft);
+  border: 1px solid var(--border);
+  color: var(--white); border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem; font-size: 0.875rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color: var(--gold-dark); box-shadow: 0 0 0 3px var(--gold-muted);
+}
+.form-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b76' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2.5rem; }
+.form-row { display: grid; gap: 1rem; }
+.form-row-2 { grid-template-columns: 1fr 1fr; }
+.form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-hint { font-size: 0.75rem; color: var(--white-muted); margin-top: 0.3rem; }
+
+/* ═══ BUTTONS ═══ */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.55rem 1.1rem; border-radius: var(--radius-sm);
+  font-size: 0.85rem; font-weight: 500; border: 1px solid transparent;
+  transition: all var(--transition); white-space: nowrap;
+  font-family: var(--font-body);
+}
+.btn-gold {
+  background: var(--gold); color: #000; border-color: var(--gold);
+}
+.btn-gold:hover { background: var(--gold-bright); border-color: var(--gold-bright); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212,175,55,0.3); }
+.btn-outline { background: transparent; color: var(--gold); border-color: var(--border-gold); }
+.btn-outline:hover { background: var(--gold-muted); border-color: var(--gold); }
+.btn-ghost { background: var(--bg-hover); color: var(--white-dim); border-color: var(--border); }
+.btn-ghost:hover { color: var(--white); border-color: var(--white-muted); }
+.btn-danger { background: var(--red-muted); color: var(--red); border-color: rgba(231,76,60,0.3); }
+.btn-danger:hover { background: rgba(231,76,60,0.2); }
+.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.78rem; }
+.btn-icon { width: 32px; height: 32px; padding: 0; justify-content: center; border-radius: var(--radius-sm); }
+
+/* ═══ CMS LAYOUT ═══ */
+#cmsPanel { display: none; }
+.cms-layout { display: flex; min-height: 100vh; }
+
+/* ═══ SIDEBAR ═══ */
+.cms-sidebar {
+  width: var(--sidebar-w); background: var(--bg-soft);
+  border-right: 1px solid var(--border);
+  height: 100vh; position: fixed; top: 0; left: 0;
+  display: flex; flex-direction: column; z-index: 100;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 1.25rem 1rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.65rem;
+  flex-shrink: 0;
+}
+.sidebar-logo {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, #b8960a, var(--gold));
+  border-radius: 7px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 0.62rem; font-weight: 800;
+  color: #000; letter-spacing: 0.03em; flex-shrink: 0;
+}
+.sidebar-brand { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--white); }
+.sidebar-version { font-size: 0.65rem; color: var(--white-muted); font-family: var(--font-mono); }
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 0.75rem 0.75rem; }
+.nav-section {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--white-muted); padding: 0.9rem 0.6rem 0.4rem;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.55rem 0.75rem; border-radius: var(--radius-sm);
+  color: var(--white-muted); font-size: 0.85rem;
+  cursor: pointer; transition: all var(--transition);
+  margin-bottom: 2px; border: none; background: none; width: 100%;
+  text-align: left;
+}
+.nav-item:hover { background: var(--bg-hover); color: var(--white); }
+.nav-item.active { background: var(--gold-muted); color: var(--gold); border: 1px solid var(--border-gold); }
+.nav-item .nav-icon { font-size: 1rem; flex-shrink: 0; width: 18px; text-align: center; }
+.nav-badge {
+  margin-left: auto; background: var(--gold); color: #000;
+  font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.4rem;
+  border-radius: 99px; min-width: 18px; text-align: center;
+  font-family: var(--font-mono);
+}
+.sidebar-footer {
+  padding: 0.75rem; border-top: 1px solid var(--border); flex-shrink: 0;
+}
+
+/* ═══ MAIN AREA ═══ */
+.cms-main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
+.cms-topbar {
+  background: var(--bg-soft); border-bottom: 1px solid var(--border);
+  padding: 0.75rem 2rem; display: flex; align-items: center;
+  justify-content: space-between; gap: 1rem; position: sticky; top: 0; z-index: 50;
+}
+.topbar-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--white); }
+.topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+.cms-content { padding: 2rem; }
+
+/* ═══ TABS ═══ */
+.cms-tab { display: none; }
+.cms-tab.active { display: block; }
+
+/* ═══ DASHBOARD ═══ */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.stat-card:hover { border-color: var(--border-gold); transform: translateY(-2px); }
+.stat-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+.stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--white); line-height: 1; }
+.stat-label { font-size: 0.78rem; color: var(--white-muted); margin-top: 0.25rem; }
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.dash-widget {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.5rem;
+}
+.widget-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.widget-title { font-size: 0.85rem; font-weight: 600; color: var(--white); font-family: var(--font-display); }
+.widget-action { font-size: 0.78rem; color: var(--gold); cursor: pointer; }
+.widget-action:hover { text-decoration: underline; }
+.quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 2rem; }
+.quick-btn {
+  background: var(--bg-card); border: 1px dashed var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem; text-align: center;
+  cursor: pointer; transition: all var(--transition); color: var(--white-muted);
+}
+.quick-btn:hover { border-color: var(--gold-dark); color: var(--gold); background: var(--gold-muted); }
+.quick-btn-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.quick-btn-label { font-size: 0.8rem; font-weight: 500; }
+.storage-bar { background: var(--border); border-radius: 99px; height: 6px; overflow: hidden; margin: 0.5rem 0; }
+.storage-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #b8960a, var(--gold)); transition: width 0.4s ease; }
+
+/* ═══ CONTENT ROWS ═══ */
+.content-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem;
+}
+.content-card-header {
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+.content-card-body { padding: 0; }
+
+.data-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+.data-row:last-child { border-bottom: none; }
+.data-row:hover { background: var(--bg-hover); }
+
+.row-icon { font-size: 1.25rem; flex-shrink: 0; width: 28px; text-align: center; }
+.row-main { flex: 1; min-width: 0; }
+.row-title { font-size: 0.875rem; font-weight: 500; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-sub { font-size: 0.75rem; color: var(--white-muted); margin-top: 1px; }
+.row-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+
+/* ═══ SEARCH BAR ═══ */
+.search-wrap { position: relative; }
+.search-wrap input { padding-left: 2.25rem; }
+.search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--white-muted); font-size: 0.85rem; pointer-events: none; }
+
+/* ═══ FILTERS ═══ */
+.filter-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.filter-pill {
+  padding: 0.3rem 0.75rem; border-radius: 99px; font-size: 0.78rem;
+  border: 1px solid var(--border); background: transparent; color: var(--white-muted);
+  cursor: pointer; transition: all var(--transition);
+}
+.filter-pill:hover, .filter-pill.active { background: var(--gold-muted); color: var(--gold); border-color: var(--border-gold); }
+
+/* ═══ STATUS PILLS ═══ */
+.pill { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.72rem; font-weight: 500; white-space: nowrap; }
+.pill-published { background: var(--green-muted); color: var(--green); }
+.pill-draft { background: rgba(155,155,175,0.12); color: var(--white-muted); }
+.pill-featured { background: var(--gold-muted); color: var(--gold); }
+.pill-builtin { background: var(--blue-muted); color: var(--blue); }
+.pill-unread { background: var(--gold-muted); color: var(--gold); }
+.pill-read { background: rgba(155,155,175,0.1); color: var(--white-muted); }
+.pill-cat { background: var(--bg-soft); color: var(--white-dim); border: 1px solid var(--border); font-family: var(--font-mono); font-size: 0.68rem; }
+
+/* ═══ EMPTY STATE ═══ */
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--white-muted); }
+.empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5; }
+.empty-title { font-size: 1rem; font-weight: 600; color: var(--white-dim); margin-bottom: 0.5rem; }
+.empty-sub { font-size: 0.85rem; max-width: 300px; margin: 0 auto 1.5rem; }
+
+/* ═══ MEDIA LIBRARY ═══ */
+.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; padding: 1.5rem; }
+.media-item {
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; cursor: pointer;
+  transition: all var(--transition); position: relative;
+}
+.media-item:hover { border-color: var(--gold-dark); transform: translateY(-2px); }
+.media-item.selected { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-muted); }
+.media-thumb {
+  height: 110px; display: flex; align-items: center; justify-content: center;
+  background: var(--bg-card); font-size: 2.5rem; overflow: hidden;
+}
+.media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.media-info { padding: 0.6rem 0.75rem; }
+.media-name { font-size: 0.75rem; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.media-meta { font-size: 0.68rem; color: var(--white-muted); margin-top: 2px; font-family: var(--font-mono); }
+.drop-zone {
+  border: 2px dashed var(--border-gold); border-radius: var(--radius-lg);
+  padding: 2.5rem; text-align: center; background: var(--gold-muted);
+  cursor: pointer; transition: all var(--transition); margin: 1.5rem;
+}
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--gold); background: rgba(212,175,55,0.15); }
+.drop-zone-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+.drop-zone-text { font-size: 0.875rem; color: var(--white-dim); }
+.drop-zone-hint { font-size: 0.75rem; color: var(--white-muted); margin-top: 0.35rem; }
+.upload-progress-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 0.5rem; }
+.upload-progress-bar { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 0.5rem; }
+.upload-progress-fill { height: 100%; background: var(--gold); border-radius: 99px; transition: width 0.3s ease; }
+
+/* ═══ SETTINGS TABS ═══ */
+.settings-nav { display: flex; gap: 0.25rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; overflow-x: auto; }
+.settings-tab {
+  padding: 0.7rem 1.25rem; font-size: 0.85rem; font-weight: 500;
+  color: var(--white-muted); border-bottom: 2px solid transparent;
+  cursor: pointer; white-space: nowrap; transition: all var(--transition);
+  border: none; background: none;
+}
+.settings-tab:hover { color: var(--white); }
+.settings-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.settings-section { display: none; }
+.settings-section.active { display: block; }
+.settings-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; max-width: 720px; margin-bottom: 1.5rem; }
+.settings-card-title { font-size: 0.95rem; font-weight: 600; color: var(--white); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+
+/* ═══ MODALS ═══ */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85); z-index: 2000;
+  overflow-y: auto; padding: 2rem 1rem;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+.modal-box {
+  width: 100%; max-width: 720px; margin: auto;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 0;
+  position: relative; box-shadow: var(--shadow);
+}
+.modal-header {
+  padding: 1.5rem 1.75rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title { font-size: 1.1rem; font-weight: 700; font-family: var(--font-display); }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-hover); border: 1px solid var(--border);
+  color: var(--white-muted); display: flex; align-items: center;
+  justify-content: center; font-size: 1rem; cursor: pointer;
+  transition: all var(--transition); flex-shrink: 0;
+}
+.modal-close:hover { background: var(--red-muted); color: var(--red); border-color: rgba(231,76,60,0.3); }
+.modal-body { padding: 1.75rem; }
+.modal-footer { padding: 1.25rem 1.75rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; justify-content: flex-end; flex-wrap: wrap; }
+.modal-lg { max-width: 900px; }
+
+/* ═══ SECTION HEADERS ═══ */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
+.page-title { font-size: 1.5rem; font-weight: 700; }
+.page-subtitle { font-size: 0.82rem; color: var(--white-muted); margin-top: 0.2rem; }
+
+/* ═══ AUTHOR CARD ═══ */
+.author-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.5rem;
+  display: flex; gap: 1.25rem; align-items: flex-start;
+  transition: border-color var(--transition);
+}
+.author-card:hover { border-color: var(--border-gold); }
+.author-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--bg-hover), var(--border));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; font-weight: 700; color: var(--gold);
+  flex-shrink: 0; font-family: var(--font-display); overflow: hidden;
+}
+.author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.author-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+
+/* ═══ MESSAGES ═══ */
+.msg-row {
+  padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background var(--transition);
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+.msg-row:hover { background: var(--bg-hover); }
+.msg-row.unread { background: rgba(212,175,55,0.03); }
+.msg-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 0.45rem; }
+.msg-dot.read { background: transparent; border: 1px solid var(--border); }
+
+/* ═══ CODE / MONOSPACE ═══ */
+.code-area { font-family: var(--font-mono); font-size: 0.82rem; }
+.key-value {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold);
+  background: var(--bg); padding: 0.3rem 0.6rem; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); flex: 1; word-break: break-all;
+}
+
+/* ═══ TOAST ═══ */
+.toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--bg-card); border: 1px solid var(--border-gold);
+  color: var(--white); padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-lg); font-size: 0.875rem;
+  box-shadow: var(--shadow), var(--shadow-gold);
+  transform: translateY(100px); opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
+  max-width: 340px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.toast-error { border-color: rgba(231,76,60,0.4); }
+.toast.toast-success { border-color: rgba(46,204,113,0.4); }
+
+/* ═══ DANGER ZONE ═══ */
+.danger-card { background: var(--bg-card); border: 1px solid rgba(231,76,60,0.3); border-radius: var(--radius-lg); padding: 1.75rem; max-width: 720px; }
+.danger-title { color: var(--red); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; }
+
+/* ═══ INFO BOX ═══ */
+.info-box {
+  background: var(--gold-muted); border: 1px solid var(--border-gold);
+  border-radius: var(--radius-sm); padding: 0.9rem 1.1rem;
+  font-size: 0.82rem; color: #C9A84C; margin-bottom: 1.5rem;
+}
+
+/* ═══ MOBILE ═══ */
+@media (max-width: 768px) {
+  .cms-sidebar { display: none; }
+  .cms-main { margin-left: 0; }
+  .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+  .dash-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .quick-actions { grid-template-columns: 1fr; }
+  .media-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+@media (max-width: 480px) {
+  .cms-content { padding: 1rem; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ═══ TOGGLE SWITCH ═══ */
+.toggle-wrap { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+.toggle { position: relative; width: 38px; height: 20px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0;
+  background: var(--border); border-radius: 99px;
+  transition: background var(--transition);
+}
+.toggle-slider::after {
+  content: ''; position: absolute;
+  width: 14px; height: 14px;
+  border-radius: 50%; background: var(--white-muted);
+  top: 3px; left: 3px; transition: all var(--transition);
+}
+.toggle input:checked + .toggle-slider { background: var(--gold); }
+.toggle input:checked + .toggle-slider::after { transform: translateX(18px); background: #000; }
+
+/* ═══ UPLOAD PREVIEW ═══ */
+.img-preview {
+  width: 100%; max-height: 200px; object-fit: cover;
+  border-radius: var(--radius-sm); border: 1px solid var(--border);
+  margin-top: 0.5rem; display: none;
+}
+
+/* ═══ PAGINATION ═══ */
+.pagination { display: flex; align-items: center; gap: 0.4rem; padding: 1.25rem 1.5rem; border-top: 1px solid var(--border); }
+.page-btn {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  background: var(--bg-hover); border: 1px solid var(--border);
+  color: var(--white-muted); display: flex; align-items: center; justify-content: center;
+  font-size: 0.82rem; cursor: pointer; transition: all var(--transition);
+}
+.page-btn:hover { border-color: var(--gold-dark); color: var(--gold); }
+.page-btn.active { background: var(--gold-muted); border-color: var(--border-gold); color: var(--gold); }
+.page-info { font-size: 0.78rem; color: var(--white-muted); margin-left: auto; }
+
+/* ═══ RICH EDITOR TOOLBAR ═══ */
+.editor-wrap { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.editor-toolbar {
+  background: var(--bg-soft); border-bottom: 1px solid var(--border);
+  padding: 0.5rem 0.75rem; display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center;
+}
+.editor-btn {
+  width: 28px; height: 28px; border-radius: 4px; background: none;
+  border: none; color: var(--white-muted); font-size: 0.8rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.editor-btn:hover { background: var(--bg-hover); color: var(--white); }
+.editor-btn.active { background: var(--gold-muted); color: var(--gold); }
+.editor-sep { width: 1px; height: 20px; background: var(--border); margin: 0 0.25rem; }
+.editor-content {
+  min-height: 240px; padding: 1rem; outline: none;
+  font-size: 0.875rem; line-height: 1.7; color: var(--white);
+  background: var(--bg-soft); overflow-y: auto; max-height: 500px;
+}
+.editor-content:empty::before { content: attr(data-placeholder); color: var(--white-muted); pointer-events: none; }
+.editor-content h1, .editor-content h2, .editor-content h3 { font-family: var(--font-display); color: var(--white); margin: 1rem 0 0.5rem; }
+.editor-content a { color: var(--gold); }
+.editor-content blockquote { border-left: 3px solid var(--gold-dark); padding-left: 1rem; margin: 0.75rem 0; color: var(--white-dim); }
+.editor-content code { font-family: var(--font-mono); background: var(--bg); padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.85em; }
+.editor-content ul, .editor-content ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+
+/* ═══ MEDIA PICKER IN MODAL ═══ */
+.media-mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.6rem; max-height: 280px; overflow-y: auto; padding: 1rem; background: var(--bg-soft); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.media-mini-item { aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all var(--transition); background: var(--bg-card); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+.media-mini-item:hover, .media-mini-item.selected { border-color: var(--gold); }
+.media-mini-item img { width: 100%; height: 100%; object-fit: cover; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;">
-  <div style="width:100%;max-width:400px;">
-    <div style="text-align:center;margin-bottom:2.5rem;">
-      <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:var(--black);margin:0 auto 1rem;">W3L</div>
-      <h2>CMS Admin</h2>
-      <p style="font-size:0.875rem;">Web3Legals Content Management System</p>
-    </div>
+<!-- ═══════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">W3L</div>
+    <h2 class="login-title">CMS Admin</h2>
+    <p class="login-sub">Web3Legals Content Management System</p>
     <div class="form-group">
-      <label class="form-label">Password</label>
-      <input type="password" id="pwInput" class="form-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+      <label class="form-label">Admin Password</label>
+      <input type="password" id="pwInput" class="form-input" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button onclick="doLogin()" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:0.5rem;">Access CMS</button>
-    <p id="loginErr" style="color:#e74c3c;font-size:0.85rem;text-align:center;margin-top:1rem;display:none;">Incorrect password. Try again.</p>
-    <p style="font-size:0.75rem;text-align:center;margin-top:1.5rem;color:var(--white-muted);">🔒 SHA-256 protected · Authorised users only</p>
+    <button onclick="doLogin()" class="btn btn-gold" style="width:100%;justify-content:center;">Access CMS</button>
+    <p id="loginErr" class="login-err">Incorrect password. Please try again.</p>
+    <p class="login-footer">🔒 SHA-256 protected · Authorised users only</p>
   </div>
 </div>
 
-<!-- CMS PANEL -->
-<div id="cmsPanel" style="display:none;">
-  <aside class="cms-sidebar">
-    <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:2rem;display:flex;align-items:center;gap:0.6rem;">
-      <div style="width:28px;height:28px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:900;color:var(--black);">W3L</div>
-      CMS
-    </div>
-    <span class="cms-nav-section">Content</span>
-    <button class="cms-nav-item active" onclick="showTab('posts',this)">📝 Blog Posts</button>
-    <button class="cms-nav-item" onclick="showTab('pages',this)">📄 Pages</button>
-    <button class="cms-nav-item" onclick="showTab('media',this)">🖼️ Media Library</button>
-    <button class="cms-nav-item" onclick="showTab('redirects',this)">↪️ Redirects</button>
-    <span class="cms-nav-section">System</span>
-    <button class="cms-nav-item" onclick="showTab('secrets',this)">🔑 API Secrets</button>
-    <button class="cms-nav-item" onclick="showTab('settings',this)">⚙️ Settings</button>
-    <div style="position:absolute;bottom:1.5rem;left:1.5rem;right:1.5rem;">
-      <button onclick="logout()" class="cms-nav-item" style="color:#e74c3c;border:1px solid rgba(231,76,60,0.2);">🚪 Logout</button>
-    </div>
-  </aside>
+<!-- ═══════════════════════════════════════
+     CMS PANEL
+════════════════════════════════════════ -->
+<div id="cmsPanel">
+  <div class="cms-layout">
 
-  <main class="cms-main">
+    <!-- SIDEBAR -->
+    <aside class="cms-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">W3L</div>
+        <div>
+          <div class="sidebar-brand">Web3Legals</div>
+          <div class="sidebar-version">CMS v2.0</div>
+        </div>
+      </div>
 
-    <!-- POSTS -->
-    <div id="tab-posts">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
-        <div><h2>Blog Posts</h2><p id="postsCount" style="font-size:0.78rem;color:var(--white-muted);margin-top:0.2rem;"></p></div>
-        <button class="btn btn-gold" onclick="openPostModal()">+ New Post</button>
-      </div>
-      <div class="filter-bar">
-        <input class="search-in" id="postSearch" placeholder="Search posts…" oninput="renderPosts()">
-        <select class="form-select" id="filterStatus" onchange="renderPosts()" style="width:auto;">
-          <option value="">All Status</option><option value="published">Published</option>
-          <option value="draft">Draft</option><option value="scheduled">Scheduled</option>
-        </select>
-        <select class="form-select" id="filterCat" onchange="renderPosts()" style="width:auto;">
-          <option value="">All Categories</option>
-          <option>MiCA</option><option>UAE</option><option>Singapore</option>
-          <option>DeFi</option><option>DAO</option><option>NFT</option><option>Token</option><option>Other</option>
-        </select>
-      </div>
-      <div id="postsList"></div>
-    </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Overview</div>
+        <button class="nav-item active" onclick="showTab('dashboard', this)">
+          <span class="nav-icon">📊</span> Dashboard
+        </button>
 
-    <!-- PAGES -->
-    <div id="tab-pages" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
-        <h2>Pages</h2>
-        <button class="btn btn-gold" onclick="openPageModal()">+ New Page</button>
-      </div>
-      <div id="pagesList"></div>
-    </div>
+        <div class="nav-section">Content</div>
+        <button class="nav-item" onclick="showTab('posts', this)">
+          <span class="nav-icon">📝</span> Blog Posts
+          <span class="nav-badge" id="badge-posts">0</span>
+        </button>
+        <button class="nav-item" onclick="showTab('pages', this)">
+          <span class="nav-icon">📄</span> Pages
+        </button>
+        <button class="nav-item" onclick="showTab('research', this)">
+          <span class="nav-icon">📚</span> Research Papers
+          <span class="nav-badge" id="badge-research" style="display:none">0</span>
+        </button>
 
-    <!-- MEDIA -->
-    <div id="tab-media" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
-        <div><h2>Media Library</h2><p id="mediaCount" style="font-size:0.78rem;color:var(--white-muted);margin-top:0.2rem;">0 files</p></div>
-        <button class="btn btn-gold" onclick="document.getElementById('fileUpload').click()">⬆ Upload Files</button>
-        <input type="file" id="fileUpload" style="display:none" multiple accept="image/*,.pdf,.doc,.docx,.xlsx,.pptx,.svg,.zip" onchange="handleUpload(this.files)">
-      </div>
-      <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileUpload').click()">
-        <div style="font-size:1.5rem;margin-bottom:0.5rem;">📁</div>
-        <p style="color:var(--white-muted);font-size:0.85rem;">Drop files here or click to upload</p>
-        <p style="font-size:0.72rem;color:#555;margin-top:0.25rem;">Images · PDF · DOCX · XLSX · PPT · ZIP · SVG</p>
-      </div>
-      <div id="mediaGrid" class="media-grid"></div>
-    </div>
+        <div class="nav-section">Assets</div>
+        <button class="nav-item" onclick="showTab('media', this)">
+          <span class="nav-icon">📁</span> Media Library
+        </button>
+        <button class="nav-item" onclick="showTab('authors', this)">
+          <span class="nav-icon">👥</span> Authors
+        </button>
 
-    <!-- REDIRECTS -->
-    <div id="tab-redirects" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-        <h2>301 / 302 Redirects</h2>
-        <button class="btn btn-gold" onclick="addRedirect()">+ Add Redirect</button>
-      </div>
-      <div id="redirectsList"></div>
-    </div>
+        <div class="nav-section">Inbox</div>
+        <button class="nav-item" onclick="showTab('messages', this)">
+          <span class="nav-icon">💬</span> Contact Messages
+          <span class="nav-badge" id="badge-messages" style="display:none">0</span>
+        </button>
 
-    <!-- SECRETS -->
-    <div id="tab-secrets" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
-        <h2>API Secrets &amp; Config</h2>
-        <button class="btn btn-gold" onclick="openSecretModal()">+ Add Secret</button>
-      </div>
-      <div style="background:var(--black-card);border:1px solid rgba(255,200,0,0.2);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:2rem;">
-        <p style="font-size:0.85rem;color:#C9A84C;">⚠️ Secrets are stored in your browser's local storage. They are never transmitted to any server.</p>
-      </div>
-      <div id="secretsList"></div>
-    </div>
+        <div class="nav-section">System</div>
+        <button class="nav-item" onclick="showTab('settings', this)">
+          <span class="nav-icon">⚙️</span> Website Settings
+        </button>
+        <button class="nav-item" onclick="showTab('apikeys', this)">
+          <span class="nav-icon">🔑</span> API Keys
+        </button>
+      </nav>
 
-    <!-- SETTINGS -->
-    <div id="tab-settings" style="display:none;">
-      <h2 style="margin-bottom:2rem;">Settings</h2>
-      <div class="card" style="max-width:600px;margin-bottom:1.5rem;">
-        <h4 style="margin-bottom:1.25rem;">Site Configuration</h4>
-        <div class="form-group"><label class="form-label">Site Name</label><input type="text" class="form-input" id="siteNameInput" value="Web3Legals"></div>
-        <div class="form-group"><label class="form-label">Site URL</label><input type="text" class="form-input" id="siteUrlInput" value="https://web3legals.com"></div>
-        <div class="form-group"><label class="form-label">Contact Email</label><input type="email" class="form-input" id="contactEmailInput" value="web3legal@gmail.com"></div>
-        <button onclick="saveSettings()" class="btn btn-gold">Save Settings</button>
+      <div class="sidebar-footer">
+        <button onclick="logout()" class="nav-item btn-danger" style="color:var(--red);background:var(--red-muted);border:1px solid rgba(231,76,60,0.2);">
+          <span class="nav-icon">🚪</span> Logout
+        </button>
       </div>
-      <div class="card" style="max-width:600px;margin-bottom:1.5rem;">
-        <h4 style="margin-bottom:1rem;">Change Password</h4>
-        <p style="font-size:0.875rem;margin-bottom:1.25rem;">Password is stored as SHA-256 hash. Current password required to change.</p>
-        <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-input" id="curPw"></div>
-        <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="newPw"></div>
-        <div class="form-group"><label class="form-label">Confirm New Password</label><input type="password" class="form-input" id="confPw"></div>
-        <button onclick="changePw()" class="btn btn-outline">Update Password</button>
-      </div>
-      <div class="card" style="max-width:600px;border-color:#e74c3c;">
-        <h4 style="margin-bottom:1rem;color:#e74c3c;">Danger Zone</h4>
-        <p style="font-size:0.875rem;margin-bottom:1rem;">Clear all CMS data from browser storage. This cannot be undone.</p>
-        <button onclick="clearAllData()" class="btn" style="background:rgba(231,76,60,0.1);color:#e74c3c;border:1px solid #e74c3c;">Clear All Data</button>
-      </div>
-    </div>
+    </aside>
 
-  </main>
-</div>
+    <!-- MAIN -->
+    <main class="cms-main">
+      <!-- TOP BAR -->
+      <div class="cms-topbar">
+        <div id="topbarTitle" class="topbar-title">Dashboard</div>
+        <div class="topbar-right" id="topbarActions"></div>
+      </div>
+
+      <div class="cms-content">
+
+        <!-- ═══ DASHBOARD ═══ -->
+        <div id="tab-dashboard" class="cms-tab active">
+          <div class="stat-grid" id="dashStats"></div>
+          <div class="quick-actions" id="dashQuick"></div>
+          <div class="dash-grid">
+            <div class="dash-widget">
+              <div class="widget-header">
+                <span class="widget-title">Recent Blog Posts</span>
+                <span class="widget-action" onclick="showTab('posts', document.querySelector('[onclick*=posts]'))">View all →</span>
+              </div>
+              <div id="dashRecentPosts"></div>
+            </div>
+            <div class="dash-widget">
+              <div class="widget-header">
+                <span class="widget-title">Recent Messages</span>
+                <span class="widget-action" onclick="showTab('messages', document.querySelector('[onclick*=messages]'))">View all →</span>
+              </div>
+              <div id="dashRecentMessages"></div>
+            </div>
+          </div>
+          <div class="dash-grid">
+            <div class="dash-widget">
+              <div class="widget-header"><span class="widget-title">Recent Media</span></div>
+              <div id="dashRecentMedia"></div>
+            </div>
+            <div class="dash-widget">
+              <div class="widget-header"><span class="widget-title">Storage Usage</span></div>
+              <div id="dashStorage"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ BLOG POSTS ═══ -->
+        <div id="tab-posts" class="cms-tab">
+          <div class="content-card">
+            <div class="content-card-header">
+              <div class="search-wrap" style="flex:1;max-width:320px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="form-input" id="postSearch" placeholder="Search posts…" oninput="filterPosts()">
+              </div>
+              <div class="filter-bar" id="postFilters">
+                <button class="filter-pill active" onclick="setPostFilter('all',this)">All</button>
+                <button class="filter-pill" onclick="setPostFilter('published',this)">Published</button>
+                <button class="filter-pill" onclick="setPostFilter('draft',this)">Drafts</button>
+              </div>
+            </div>
+            <div class="content-card-body" id="postsList">
+              <div class="empty-state">
+                <div class="empty-icon">📝</div>
+                <div class="empty-title">No posts yet</div>
+                <div class="empty-sub">Create your first blog post to get started.</div>
+                <button class="btn btn-gold" onclick="openPostModal()">+ New Post</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PAGES ═══ -->
+        <div id="tab-pages" class="cms-tab">
+          <div class="content-card">
+            <div class="content-card-header">
+              <div class="search-wrap" style="flex:1;max-width:320px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="form-input" id="pageSearch" placeholder="Search pages…" oninput="filterPages()">
+              </div>
+            </div>
+            <div class="content-card-body" id="pagesList"></div>
+          </div>
+        </div>
+
+        <!-- ═══ RESEARCH PAPERS ═══ -->
+        <div id="tab-research" class="cms-tab">
+          <div class="content-card">
+            <div class="content-card-header">
+              <div class="search-wrap" style="flex:1;max-width:320px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="form-input" id="researchSearch" placeholder="Search papers…" oninput="filterResearch()">
+              </div>
+              <div class="filter-bar" id="researchFilters">
+                <button class="filter-pill active" onclick="setResearchFilter('all',this)">All</button>
+                <button class="filter-pill" onclick="setResearchFilter('featured',this)">Featured</button>
+              </div>
+            </div>
+            <div class="content-card-body" id="researchList"></div>
+          </div>
+        </div>
+
+        <!-- ═══ MEDIA LIBRARY ═══ -->
+        <div id="tab-media" class="cms-tab">
+          <div class="content-card">
+            <div class="content-card-header">
+              <div class="search-wrap" style="flex:1;max-width:320px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="form-input" id="mediaSearch" placeholder="Search files…" oninput="filterMedia()">
+              </div>
+              <div style="display:flex;gap:0.5rem;">
+                <button class="btn btn-ghost btn-sm" onclick="setMediaView('grid')" id="mediaViewGrid" title="Grid view">⊞</button>
+                <button class="btn btn-ghost btn-sm" onclick="setMediaView('list')" id="mediaViewList" title="List view">≡</button>
+              </div>
+            </div>
+            <div id="dropZone" class="drop-zone" onclick="document.getElementById('fileUploadInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+              <input type="file" id="fileUploadInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.svg,.gif,.zip" style="display:none" onchange="handleFileSelect(event)">
+              <div class="drop-zone-icon">☁️</div>
+              <div class="drop-zone-text">Drag & drop files here, or click to browse</div>
+              <div class="drop-zone-hint">PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, WEBP, SVG, GIF, ZIP</div>
+            </div>
+            <div id="uploadProgressList" style="padding:0 1.5rem;"></div>
+            <div id="mediaGrid" class="media-grid"></div>
+            <div id="mediaList" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- ═══ AUTHORS ═══ -->
+        <div id="tab-authors" class="cms-tab">
+          <div class="author-grid" id="authorsList"></div>
+          <div id="authorsEmpty" class="empty-state" style="display:none;">
+            <div class="empty-icon">👥</div>
+            <div class="empty-title">No authors yet</div>
+            <div class="empty-sub">Add authors to assign them to blog posts and research papers.</div>
+            <button class="btn btn-gold" onclick="openAuthorModal()">+ Add Author</button>
+          </div>
+        </div>
+
+        <!-- ═══ CONTACT MESSAGES ═══ -->
+        <div id="tab-messages" class="cms-tab">
+          <div class="content-card">
+            <div class="content-card-header">
+              <div class="search-wrap" style="flex:1;max-width:320px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="form-input" id="msgSearch" placeholder="Search messages…" oninput="filterMessages()">
+              </div>
+              <div class="filter-bar">
+                <button class="filter-pill active" onclick="setMsgFilter('all',this)">All</button>
+                <button class="filter-pill" onclick="setMsgFilter('unread',this)">Unread</button>
+                <button class="filter-pill" onclick="setMsgFilter('read',this)">Read</button>
+              </div>
+            </div>
+            <div class="content-card-body" id="messagesList"></div>
+          </div>
+        </div>
+
+        <!-- ═══ WEBSITE SETTINGS ═══ -->
+        <div id="tab-settings" class="cms-tab">
+          <div class="settings-nav">
+            <button class="settings-tab active" onclick="showSettingsTab('general',this)">General</button>
+            <button class="settings-tab" onclick="showSettingsTab('seo',this)">SEO</button>
+            <button class="settings-tab" onclick="showSettingsTab('social',this)">Social</button>
+            <button class="settings-tab" onclick="showSettingsTab('analytics',this)">Analytics</button>
+            <button class="settings-tab" onclick="showSettingsTab('smtp',this)">SMTP</button>
+            <button class="settings-tab" onclick="showSettingsTab('cloudflare',this)">Cloudflare</button>
+            <button class="settings-tab" onclick="showSettingsTab('security',this)">Security</button>
+            <button class="settings-tab" onclick="showSettingsTab('danger',this)" style="color:var(--red);">Danger Zone</button>
+          </div>
+
+          <!-- General -->
+          <div class="settings-section active" id="settings-general">
+            <div class="settings-card">
+              <div class="settings-card-title">General Configuration</div>
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label class="form-label">Website Name</label>
+                  <input type="text" class="form-input" id="s-siteName" value="Web3Legals">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Website URL</label>
+                  <input type="url" class="form-input" id="s-siteUrl" value="https://web3legals.com">
+                </div>
+              </div>
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label class="form-label">Contact Email</label>
+                  <input type="email" class="form-input" id="s-contactEmail" value="web3legal@gmail.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone</label>
+                  <input type="text" class="form-input" id="s-phone" placeholder="+1 234 567 8900">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-input" id="s-address" placeholder="123 Legal St, Dubai, UAE">
+              </div>
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label class="form-label">Logo URL</label>
+                  <input type="url" class="form-input" id="s-logo" placeholder="https://…/logo.png">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Favicon URL</label>
+                  <input type="url" class="form-input" id="s-favicon" placeholder="https://…/favicon.ico">
+                </div>
+              </div>
+              <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- SEO -->
+          <div class="settings-section" id="settings-seo">
+            <div class="settings-card">
+              <div class="settings-card-title">SEO Defaults</div>
+              <div class="form-group">
+                <label class="form-label">Default Meta Title</label>
+                <input type="text" class="form-input" id="s-metaTitle" placeholder="Web3Legals — Crypto Legal Experts">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Default Meta Description</label>
+                <textarea class="form-textarea" id="s-metaDesc" placeholder="Your go-to resource for Web3 legal compliance…" style="min-height:80px;"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Open Graph Image URL</label>
+                <input type="url" class="form-input" id="s-ogImage" placeholder="https://…/og-image.jpg">
+              </div>
+              <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- Social -->
+          <div class="settings-section" id="settings-social">
+            <div class="settings-card">
+              <div class="settings-card-title">Social Media Links</div>
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label class="form-label">LinkedIn</label>
+                  <input type="url" class="form-input" id="s-linkedin" placeholder="https://linkedin.com/company/…">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">X (Twitter)</label>
+                  <input type="url" class="form-input" id="s-twitter" placeholder="https://x.com/…">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Facebook</label>
+                  <input type="url" class="form-input" id="s-facebook" placeholder="https://facebook.com/…">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">YouTube</label>
+                  <input type="url" class="form-input" id="s-youtube" placeholder="https://youtube.com/@…">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">GitHub</label>
+                  <input type="url" class="form-input" id="s-github" placeholder="https://github.com/…">
+                </div>
+              </div>
+              <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- Analytics -->
+          <div class="settings-section" id="settings-analytics">
+            <div class="settings-card">
+              <div class="settings-card-title">Analytics & Tracking</div>
+              <div class="form-group">
+                <label class="form-label">Google Analytics ID</label>
+                <input type="text" class="form-input" id="s-gaId" placeholder="G-XXXXXXXXXX">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Google Tag Manager ID</label>
+                <input type="text" class="form-input" id="s-gtmId" placeholder="GTM-XXXXXXX">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Google Search Console Verification</label>
+                <input type="text" class="form-input" id="s-gscToken" placeholder="Verification meta tag content">
+              </div>
+              <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- SMTP -->
+          <div class="settings-section" id="settings-smtp">
+            <div class="settings-card">
+              <div class="settings-card-title">SMTP Configuration</div>
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label class="form-label">SMTP Host</label>
+                  <input type="text" class="form-input" id="s-smtpHost" placeholder="smtp.gmail.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Port</label>
+                  <input type="number" class="form-input" id="s-smtpPort" placeholder="587">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Username</label>
+                  <input type="text" class="form-input" id="s-smtpUser" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Password</label>
+                  <input type="password" class="form-input" id="s-smtpPass" placeholder="App password">
+                </div>
+              </div>
+              <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- Cloudflare -->
+          <div class="settings-section" id="settings-cloudflare">
+            <div class="settings-card">
+              <div class="settings-card-title">Cloudflare Integration</div>
+              <div class="form-group">
+                <label class="form-label">Worker URL</label>
+                <input type="url" class="form-input" id="s-workerUrl" placeholder="https://worker.your-subdomain.workers.dev">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CDN / R2 Public URL</label>
+                <input type="url" class="form-input" id="s-cdnUrl" placeholder="https://cdn.web3legals.com">
+              </div>
+              <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- Security -->
+          <div class="settings-section" id="settings-security">
+            <div class="settings-card">
+              <div class="settings-card-title">Change Admin Password</div>
+              <p style="font-size:0.82rem;color:var(--white-muted);margin-bottom:1.25rem;">Password is stored as a SHA-256 hash. Your current password is required to change it.</p>
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input type="password" class="form-input" id="curPw" autocomplete="current-password">
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input type="password" class="form-input" id="newPw" autocomplete="new-password">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <input type="password" class="form-input" id="confPw" autocomplete="new-password">
+              </div>
+              <button class="btn btn-outline" onclick="changePw()">Update Password</button>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="settings-section" id="settings-danger">
+            <div class="danger-card">
+              <div class="danger-title">⚠️ Danger Zone</div>
+              <p style="font-size:0.875rem;color:var(--white-muted);margin-bottom:1.25rem;">Clear all CMS data from browser storage. This action cannot be undone. All posts, pages, research papers, media records, authors, messages, and settings will be permanently deleted.</p>
+              <button onclick="clearAllData()" class="btn btn-danger">Clear All CMS Data</button>
+            </div>
+          </div>
+
+        </div><!-- /tab-settings -->
+
+        <!-- ═══ API KEYS ═══ -->
+        <div id="tab-apikeys" class="cms-tab">
+          <div class="info-box">⚠️ API keys are stored encrypted in your browser's local storage and are never transmitted to any server. Use this panel to store keys for integration with external services.</div>
+          <div class="content-card">
+            <div class="content-card-header">
+              <span style="font-size:0.875rem;font-weight:600;">Stored Keys</span>
+            </div>
+            <div class="content-card-body" id="secretsList"></div>
+          </div>
+        </div>
+
+      </div><!-- /cms-content -->
+    </main>
+
+  </div><!-- /cms-layout -->
+</div><!-- /cmsPanel -->
+
+<!-- ══════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════ -->
 
 <!-- POST MODAL -->
 <div class="modal-overlay" id="postModal">
-  <div class="modal-box wide">
-    <button onclick="closeModal('postModal')" style="position:absolute;top:1rem;right:1rem;background:var(--black-border);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;cursor:pointer;">✕</button>
-    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
-      <h3 id="postModalTitle">New Blog Post</h3>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-        <span style="font-size:0.72rem;color:var(--white-muted);display:flex;align-items:center;"><span class="as-dot" id="asDot"></span><span id="asText">Unsaved</span></span>
-        <button class="btn btn-ghost" style="padding:0.4rem 0.75rem;font-size:0.8rem;" onclick="previewPost()">👁 Preview</button>
-        <button class="btn btn-outline" style="padding:0.4rem 0.75rem;font-size:0.8rem;" onclick="savePost('draft')">Save Draft</button>
-        <button class="btn btn-gold" style="padding:0.4rem 0.75rem;font-size:0.8rem;" onclick="savePost('published')">Publish</button>
-      </div>
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <h3 class="modal-title" id="postModalTitle">New Blog Post</h3>
+      <button class="modal-close" onclick="closeModal('postModal')">✕</button>
     </div>
-    <input type="hidden" id="editPostSlug">
-    <div class="itabs">
-      <button class="itab active" onclick="switchItab('ptContent',this)">Content</button>
-      <button class="itab" onclick="switchItab('ptDetails',this)">Details</button>
-      <button class="itab" onclick="switchItab('ptSEO',this)">SEO</button>
-      <button class="itab" onclick="switchItab('ptSocial',this)">Social</button>
-    </div>
-
-    <!-- Content panel -->
-    <div class="ipanel active" id="ptContent">
+    <div class="modal-body">
+      <input type="hidden" id="editPostIdx">
       <div class="form-group">
         <label class="form-label">Title *</label>
-        <input type="text" class="form-input" id="postTitle" placeholder="Post title" oninput="autoSlug();cc('postTitle','tcCount',60);updateSerp()">
-        <div class="char-c" id="tcCount">0 / 60</div>
+        <input type="text" class="form-input" id="postTitle" placeholder="Enter post title" oninput="autoSlug('postTitle','postSlug')">
+      </div>
+      <div class="form-row form-row-3">
+        <div class="form-group">
+          <label class="form-label">Category *</label>
+          <select class="form-select" id="postCat">
+            <option>MiCA</option><option>UAE</option><option>Singapore</option>
+            <option>DeFi</option><option>DAO</option><option>NFT</option>
+            <option>Token</option><option>Regulation</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="postStatus">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Read Time</label>
+          <input type="text" class="form-input" id="postReadTime" placeholder="5 min read">
+        </div>
+      </div>
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label">URL Slug</label>
+          <input type="text" class="form-input" id="postSlug" placeholder="post-url-slug">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Publish Date</label>
+          <input type="date" class="form-input" id="postDate">
+        </div>
+      </div>
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label">SEO Title</label>
+          <input type="text" class="form-input" id="postSeoTitle" placeholder="Override for search engines">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Author</label>
+          <select class="form-select" id="postAuthor"><option value="">— Select Author —</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Meta Description</label>
+        <input type="text" class="form-input" id="postMeta" placeholder="160 characters max for search snippets">
       </div>
       <div class="form-group">
         <label class="form-label">Excerpt *</label>
-        <textarea class="form-textarea" id="postExcerpt" placeholder="Brief description (1-2 sentences)" style="min-height:70px;" oninput="updateSerp()"></textarea>
+        <textarea class="form-textarea" id="postExcerpt" placeholder="Brief summary (1–2 sentences)" style="min-height:70px;"></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label" style="display:flex;justify-content:space-between;"><span>Full Content</span>
-          <button class="btn btn-ghost" style="padding:0.2rem 0.6rem;font-size:0.72rem;" onclick="openMediaPicker('editor')">Insert Media</button>
+        <label class="form-label">Featured Image</label>
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+          <input type="text" class="form-input" id="postFeaturedImage" placeholder="https://… or select from Media Library" style="flex:1;">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="openMediaPicker('postFeaturedImage')">📁 Library</button>
+        </div>
+        <img id="postFeaturedPreview" class="img-preview" src="" alt="Preview">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Attached File (PDF/DOC)</label>
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+          <input type="text" class="form-input" id="postAttachment" placeholder="Select from Media Library" style="flex:1;">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="openMediaPicker('postAttachment')">📁 Library</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Content</label>
+        <div class="editor-wrap">
+          <div class="editor-toolbar">
+            <button class="editor-btn" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
+            <button class="editor-btn" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
+            <button class="editor-btn" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+            <div class="editor-sep"></div>
+            <button class="editor-btn" onclick="execCmd('formatBlock','h2')" title="Heading 2">H2</button>
+            <button class="editor-btn" onclick="execCmd('formatBlock','h3')" title="Heading 3">H3</button>
+            <button class="editor-btn" onclick="execCmd('formatBlock','p')" title="Paragraph">¶</button>
+            <div class="editor-sep"></div>
+            <button class="editor-btn" onclick="execCmd('insertUnorderedList')" title="Bullet list">• List</button>
+            <button class="editor-btn" onclick="execCmd('insertOrderedList')" title="Numbered list">1. List</button>
+            <div class="editor-sep"></div>
+            <button class="editor-btn" onclick="execCmd('formatBlock','blockquote')" title="Blockquote">"</button>
+            <button class="editor-btn" onclick="insertLink()" title="Insert link">🔗</button>
+            <div class="editor-sep"></div>
+            <button class="editor-btn" onclick="execCmd('undo')" title="Undo">↩</button>
+            <button class="editor-btn" onclick="execCmd('redo')" title="Redo">↪</button>
+          </div>
+          <div class="editor-content code-area" id="postBody" contenteditable="true" data-placeholder="Write your article content here…"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.75rem;">
+        <label class="toggle-wrap">
+          <span class="toggle"><input type="checkbox" id="postFeatured"><span class="toggle-slider"></span></span>
+          <span style="font-size:0.85rem;color:var(--white-dim);">Featured post</span>
         </label>
-        <div id="quillEditor"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">File Attachments</label>
-        <div id="attachList" style="margin-bottom:0.5rem;"></div>
-        <button class="btn btn-ghost" style="padding:0.35rem 0.75rem;font-size:0.78rem;" onclick="openMediaPicker('attach')">+ Attach File (PDF, DOCX…)</button>
       </div>
     </div>
-
-    <!-- Details panel -->
-    <div class="ipanel" id="ptDetails">
-      <div class="g2">
-        <div>
-          <div class="form-group">
-            <label class="form-label">Status</label>
-            <select class="form-select" id="postStatus" onchange="document.getElementById('schedGrp').style.display=this.value==='scheduled'?'block':'none'">
-              <option value="draft">Draft</option><option value="published">Published</option><option value="scheduled">Scheduled</option>
-            </select>
-          </div>
-          <div class="form-group" id="schedGrp" style="display:none;">
-            <label class="form-label">Schedule Date &amp; Time</label>
-            <input type="datetime-local" class="form-input" id="postSchedule">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Category *</label>
-            <select class="form-select" id="postCat">
-              <option>MiCA</option><option>UAE</option><option>Singapore</option>
-              <option>DeFi</option><option>DAO</option><option>NFT</option><option>Token</option><option>Other</option>
-            </select>
-          </div>
-          <div class="form-group"><label class="form-label">Tags (comma separated)</label><input type="text" class="form-input" id="postTags" placeholder="compliance, AML, UAE"></div>
-          <div class="form-group"><label class="form-label">Author</label><input type="text" class="form-input" id="postAuthor" placeholder="Author name"></div>
-          <div class="form-group"><label class="form-label">Read Time</label><input type="text" class="form-input" id="postReadTime" placeholder="5 min read"></div>
-          <div class="form-group"><label class="form-label">URL Slug</label><input type="text" class="form-input" id="postSlug" placeholder="auto-generated"></div>
-          <div class="form-group"><label class="form-label">Emoji</label><input type="text" class="form-input" id="postEmoji" placeholder="📝" maxlength="4"></div>
-        </div>
-        <div>
-          <div class="form-group">
-            <label class="form-label">Featured Image</label>
-            <div id="featPreview" onclick="openMediaPicker('featured')" style="min-height:110px;background:var(--black);border:1px dashed var(--black-border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;margin-bottom:0.5rem;">
-              <span style="color:var(--white-muted);font-size:0.8rem;">Click to set featured image</span>
-            </div>
-            <input type="hidden" id="featImgUrl">
-            <button class="btn btn-ghost" style="padding:0.35rem 0.75rem;font-size:0.78rem;" onclick="openMediaPicker('featured')">Choose Image</button>
-            <button class="btn btn-ghost" style="padding:0.35rem 0.75rem;font-size:0.78rem;margin-left:0.4rem;" onclick="clearFeatImg()">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SEO panel -->
-    <div class="ipanel" id="ptSEO">
-      <div class="g2">
-        <div>
-          <div class="form-group">
-            <label class="form-label">SEO Title</label>
-            <input type="text" class="form-input" id="seoTitle" placeholder="SEO title (defaults to post title)" oninput="cc('seoTitle','stCount',60);updateSerp()">
-            <div class="char-c" id="stCount">0 / 60</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Meta Description</label>
-            <textarea class="form-textarea" id="metaDesc" placeholder="120–160 characters recommended" style="min-height:70px;" oninput="cc('metaDesc','mdCount',160);updateSerp()"></textarea>
-            <div class="char-c" id="mdCount">0 / 160</div>
-          </div>
-          <div class="form-group"><label class="form-label">Focus Keyword</label><input type="text" class="form-input" id="focusKw" placeholder="e.g. crypto exchange compliance" oninput="updateSEOScore()"></div>
-          <div class="form-group"><label class="form-label">Canonical URL</label><input type="text" class="form-input" id="canonUrl" placeholder="https://web3legals.com/blog/…"></div>
-          <div class="g2">
-            <div class="form-group"><label class="form-label">Robots Index</label><select class="form-select" id="roboIdx"><option value="index">index</option><option value="noindex">noindex</option></select></div>
-            <div class="form-group"><label class="form-label">Robots Follow</label><select class="form-select" id="roboFollow"><option value="follow">follow</option><option value="nofollow">nofollow</option></select></div>
-          </div>
-          <div class="form-group"><label class="form-label">Schema Type</label>
-            <select class="form-select" id="schemaType" onchange="genSchema()"><option value="Article">Article</option><option value="BlogPosting">BlogPosting</option><option value="FAQPage">FAQPage</option></select>
-          </div>
-          <div class="schema-out" id="schemaOut"></div>
-        </div>
-        <div>
-          <div class="form-group">
-            <label class="form-label">Google Search Preview</label>
-            <div class="serp"><div class="serp-url" id="serpUrl">web3legals.com › blog</div><div class="serp-title" id="serpTitle">Post title</div><div class="serp-desc" id="serpDesc">Meta description…</div></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">SEO Score</label>
-            <div class="seo-bar"><div class="seo-fill" id="seoFill" style="width:0%;background:#e74c3c;"></div></div>
-            <div style="font-size:0.78rem;color:var(--white-muted);margin-bottom:0.5rem;" id="seoScoreTxt">Score: 0 / 100</div>
-            <div id="seoChecks"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Social panel -->
-    <div class="ipanel" id="ptSocial">
-      <div class="g2">
-        <div>
-          <h4 style="margin-bottom:1rem;color:var(--white);">Open Graph (Facebook / LinkedIn)</h4>
-          <div class="form-group"><label class="form-label">OG Title</label><input type="text" class="form-input" id="ogTitle" placeholder="Defaults to SEO title" oninput="updateOG()"></div>
-          <div class="form-group"><label class="form-label">OG Description</label><textarea class="form-textarea" id="ogDesc" style="min-height:60px;" oninput="updateOG()"></textarea></div>
-          <div class="form-group"><label class="form-label">OG Image URL</label><input type="text" class="form-input" id="ogImg" placeholder="https://… (1200×630px)" oninput="updateOG()"></div>
-          <h4 style="margin-bottom:1rem;margin-top:1rem;color:var(--white);">Twitter / X Card</h4>
-          <div class="form-group"><label class="form-label">Card Type</label><select class="form-select" id="twCard"><option value="summary_large_image">Summary Large Image</option><option value="summary">Summary</option></select></div>
-          <div class="form-group"><label class="form-label">Twitter Title</label><input type="text" class="form-input" id="twTitle" placeholder="Defaults to OG title"></div>
-        </div>
-        <div>
-          <label class="form-label">Social Preview</label>
-          <div class="og-wrap">
-            <div class="og-img" id="ogImgPrev">No image set</div>
-            <div class="og-body">
-              <div class="og-domain">web3legals.com</div>
-              <div class="og-title" id="ogTitlePrev">Post title</div>
-              <div class="og-desc" id="ogDescPrev">Post description</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="modal-footer">
+      <button onclick="closeModal('postModal')" class="btn btn-ghost">Cancel</button>
+      <button onclick="savePost('draft')" class="btn btn-outline">Save as Draft</button>
+      <button onclick="savePost('published')" class="btn btn-gold">Publish Post</button>
     </div>
   </div>
 </div>
@@ -370,16 +1099,164 @@ body{background:var(--black)}
 <!-- PAGE MODAL -->
 <div class="modal-overlay" id="pageModal">
   <div class="modal-box">
-    <button onclick="closeModal('pageModal')" style="position:absolute;top:1rem;right:1rem;background:var(--black-border);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;cursor:pointer;">✕</button>
-    <h3 style="margin-bottom:1.5rem;" id="pageModalTitle">New Page</h3>
-    <input type="hidden" id="editPageSlug">
-    <div class="form-group"><label class="form-label">Page Title *</label><input type="text" class="form-input" id="pageTitle" placeholder="Page title"></div>
-    <div class="form-group"><label class="form-label">Page Slug (URL)</label><input type="text" class="form-input" id="pageSlug" placeholder="e.g. my-page"></div>
-    <div class="form-group"><label class="form-label">Meta Description</label><input type="text" class="form-input" id="pageMeta" placeholder="SEO description"></div>
-    <div class="form-group"><label class="form-label">Content (HTML)</label><textarea class="form-textarea" id="pageContent" placeholder="Page HTML content..." style="min-height:200px;font-family:var(--font-mono);font-size:0.85rem;"></textarea></div>
-    <div style="display:flex;gap:1rem;margin-top:0.5rem;">
-      <button onclick="savePage()" class="btn btn-gold">Save Page</button>
+    <div class="modal-header">
+      <h3 class="modal-title" id="pageModalTitle">New Page</h3>
+      <button class="modal-close" onclick="closeModal('pageModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editPageIdx">
+      <div class="form-group">
+        <label class="form-label">Page Title *</label>
+        <input type="text" class="form-input" id="pageTitle" placeholder="Page title" oninput="autoSlug('pageTitle','pageSlug')">
+      </div>
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label">URL Slug</label>
+          <input type="text" class="form-input" id="pageSlug" placeholder="page-url-slug">
+        </div>
+        <div class="form-group">
+          <label class="form-label">SEO Title</label>
+          <input type="text" class="form-input" id="pageSeoTitle" placeholder="Override for search engines">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Meta Description</label>
+        <input type="text" class="form-input" id="pageMeta" placeholder="SEO description (160 chars)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Page Content (HTML)</label>
+        <textarea class="form-textarea code-area" id="pageContent" placeholder="Page HTML content…" style="min-height:240px;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
       <button onclick="closeModal('pageModal')" class="btn btn-ghost">Cancel</button>
+      <button onclick="savePage()" class="btn btn-gold">Save Page</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESEARCH MODAL -->
+<div class="modal-overlay" id="researchModal">
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <h3 class="modal-title" id="researchModalTitle">New Research Paper</h3>
+      <button class="modal-close" onclick="closeModal('researchModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editResearchIdx">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input type="text" class="form-input" id="researchTitle" placeholder="Research paper title">
+      </div>
+      <div class="form-row form-row-3">
+        <div class="form-group">
+          <label class="form-label">Country</label>
+          <input type="text" class="form-input" id="researchCountry" placeholder="UAE, Singapore…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Topic / Category</label>
+          <input type="text" class="form-input" id="researchTopic" placeholder="DeFi, MiCA, DAO…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Publish Date</label>
+          <input type="date" class="form-input" id="researchDate">
+        </div>
+      </div>
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label">Author</label>
+          <select class="form-select" id="researchAuthor"><option value="">— Select Author —</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Keywords</label>
+          <input type="text" class="form-input" id="researchKeywords" placeholder="blockchain, compliance, regulation">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">PDF File (from Media Library)</label>
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+          <input type="text" class="form-input" id="researchPdf" placeholder="Select PDF from Media Library" style="flex:1;">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="openMediaPicker('researchPdf')">📁 Library</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cover Image</label>
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+          <input type="text" class="form-input" id="researchCover" placeholder="https://… or select from Media Library" style="flex:1;">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="openMediaPicker('researchCover')">📁 Library</button>
+        </div>
+        <img id="researchCoverPreview" class="img-preview" src="" alt="Preview">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Short Description *</label>
+        <textarea class="form-textarea" id="researchDesc" placeholder="2–3 sentence overview of the paper…" style="min-height:90px;"></textarea>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <label class="toggle-wrap">
+          <span class="toggle"><input type="checkbox" id="researchFeatured"><span class="toggle-slider"></span></span>
+          <span style="font-size:0.85rem;color:var(--white-dim);">Featured paper</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeModal('researchModal')" class="btn btn-ghost">Cancel</button>
+      <button onclick="saveResearch()" class="btn btn-gold">Save Paper</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTHOR MODAL -->
+<div class="modal-overlay" id="authorModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title" id="authorModalTitle">Add Author</h3>
+      <button class="modal-close" onclick="closeModal('authorModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editAuthorIdx">
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" id="authorName" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Designation</label>
+          <input type="text" class="form-input" id="authorTitle" placeholder="Senior Legal Analyst">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Profile Photo URL</label>
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+          <input type="text" class="form-input" id="authorPhoto" placeholder="https://… or select from Media Library" style="flex:1;">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="openMediaPicker('authorPhoto')">📁 Library</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="authorEmail" placeholder="author@web3legals.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Short Bio</label>
+        <textarea class="form-textarea" id="authorBio" placeholder="2–3 sentence bio…" style="min-height:80px;"></textarea>
+      </div>
+      <div class="form-row form-row-3">
+        <div class="form-group">
+          <label class="form-label">LinkedIn</label>
+          <input type="url" class="form-input" id="authorLinkedin" placeholder="https://linkedin.com/in/…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">X (Twitter)</label>
+          <input type="url" class="form-input" id="authorTwitter" placeholder="https://x.com/…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Website</label>
+          <input type="url" class="form-input" id="authorWeb" placeholder="https://…">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeModal('authorModal')" class="btn btn-ghost">Cancel</button>
+      <button onclick="saveAuthor()" class="btn btn-gold">Save Author</button>
     </div>
   </div>
 </div>
@@ -387,49 +1264,173 @@ body{background:var(--black)}
 <!-- SECRET MODAL -->
 <div class="modal-overlay" id="secretModal">
   <div class="modal-box">
-    <button onclick="closeModal('secretModal')" style="position:absolute;top:1rem;right:1rem;background:var(--black-border);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;cursor:pointer;">✕</button>
-    <h3 style="margin-bottom:1.5rem;">Add API Secret</h3>
-    <div class="form-group"><label class="form-label">Key Name *</label><input type="text" class="form-input" id="secretKey" placeholder="e.g. OPENAI_API_KEY"></div>
-    <div class="form-group"><label class="form-label">Value *</label><input type="text" class="form-input" id="secretValue" placeholder="sk-..."></div>
-    <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="secretDesc" placeholder="What this key is used for"></div>
-    <div style="display:flex;gap:1rem;margin-top:0.5rem;">
-      <button onclick="saveSecret()" class="btn btn-gold">Save Secret</button>
+    <div class="modal-header">
+      <h3 class="modal-title" id="secretModalTitle">Add API Key</h3>
+      <button class="modal-close" onclick="closeModal('secretModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editSecretIdx">
+      <div class="form-group">
+        <label class="form-label">Service</label>
+        <select class="form-select" id="secretService" onchange="autoFillKeyName()">
+          <option value="">— Select service —</option>
+          <option value="OpenAI">OpenAI</option>
+          <option value="Claude">Claude (Anthropic)</option>
+          <option value="Gemini">Google Gemini</option>
+          <option value="Cloudflare">Cloudflare</option>
+          <option value="GitHub">GitHub</option>
+          <option value="SMTP">SMTP</option>
+          <option value="Custom">Custom</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Key Name *</label>
+        <input type="text" class="form-input" id="secretKey" placeholder="e.g. OPENAI_API_KEY">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Value *</label>
+        <input type="text" class="form-input" id="secretValue" placeholder="sk-…" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-input" id="secretDesc" placeholder="What this key is used for">
+      </div>
+    </div>
+    <div class="modal-footer">
       <button onclick="closeModal('secretModal')" class="btn btn-ghost">Cancel</button>
+      <button onclick="saveSecret()" class="btn btn-gold">Save Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- MESSAGE MODAL -->
+<div class="modal-overlay" id="msgModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title">Message</h3>
+      <button class="modal-close" onclick="closeModal('msgModal')">✕</button>
+    </div>
+    <div class="modal-body" id="msgModalBody"></div>
+    <div class="modal-footer">
+      <button onclick="closeModal('msgModal')" class="btn btn-ghost">Close</button>
+      <button id="msgDeleteBtn" class="btn btn-danger">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MESSAGE MODAL (for testing) -->
+<div class="modal-overlay" id="addMsgModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title">Add Contact Message</h3>
+      <button class="modal-close" onclick="closeModal('addMsgModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label">Name *</label>
+          <input type="text" class="form-input" id="newMsgName" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-input" id="newMsgEmail" placeholder="john@example.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <input type="text" class="form-input" id="newMsgSubject" placeholder="Inquiry subject">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message *</label>
+        <textarea class="form-textarea" id="newMsgBody" style="min-height:120px;" placeholder="Message content…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeModal('addMsgModal')" class="btn btn-ghost">Cancel</button>
+      <button onclick="addMessage()" class="btn btn-gold">Add Message</button>
     </div>
   </div>
 </div>
 
 <!-- MEDIA PICKER MODAL -->
-<div class="modal-overlay" id="mpModal">
-  <div class="modal-box wide">
-    <button onclick="closeModal('mpModal')" style="position:absolute;top:1rem;right:1rem;background:var(--black-border);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;cursor:pointer;">✕</button>
-    <h3 style="margin-bottom:1rem;">Select Media</h3>
-    <div id="mpGrid" class="media-grid" style="max-height:380px;overflow-y:auto;"></div>
-    <div style="display:flex;gap:0.75rem;margin-top:1rem;">
-      <button class="btn btn-gold" onclick="confirmPick()">Insert Selected</button>
-      <button class="btn btn-ghost" onclick="closeModal('mpModal')">Cancel</button>
+<div class="modal-overlay" id="mediaPickerModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title">Select from Media Library</h3>
+      <button class="modal-close" onclick="closeModal('mediaPickerModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <input type="text" class="form-input" id="pickerSearch" placeholder="🔍 Search files…" oninput="renderMediaPicker()">
+      </div>
+      <div class="media-mini-grid" id="mediaPickerGrid"></div>
+      <p id="mediaPickerEmpty" style="text-align:center;color:var(--white-muted);padding:2rem;display:none;">No files in Media Library yet. Upload files first.</p>
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeModal('mediaPickerModal')" class="btn btn-ghost">Cancel</button>
+      <button onclick="confirmMediaPick()" class="btn btn-gold">Select File</button>
     </div>
   </div>
 </div>
 
-<!-- PREVIEW MODAL -->
-<div class="modal-overlay" id="previewModal">
-  <div class="modal-box wide">
-    <button onclick="closeModal('previewModal')" style="position:absolute;top:1rem;right:1rem;background:var(--black-border);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;cursor:pointer;">✕</button>
-    <h3 style="margin-bottom:1rem;">Post Preview</h3>
-    <div id="previewContent" style="background:#fff;color:#111;padding:2rem;border-radius:var(--radius);min-height:200px;line-height:1.7;"></div>
+<!-- CONFIRM DIALOG -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="confirmTitle">Confirm Action</h3>
+      <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirmMsg" style="color:var(--white-dim);font-size:0.9rem;"></p>
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeModal('confirmModal')" class="btn btn-ghost">Cancel</button>
+      <button id="confirmOkBtn" class="btn btn-danger">Delete</button>
+    </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<!-- ══════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════ -->
 <script>
-// ── SHA-256 ──────────────────────────────────────────────────────────────────
+'use strict';
+
+/* ───────────────────────────────────
+   STORAGE HELPERS
+─────────────────────────────────── */
+const S = {
+  get: k => { try { return JSON.parse(localStorage.getItem(k)) } catch { return null } },
+  set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+  del: k => localStorage.removeItem(k)
+};
+
+const getPosts     = () => S.get('w3l_posts')    || [];
+const getPages     = () => S.get('w3l_pages')    || [];
+const getResearch  = () => S.get('w3l_research') || [];
+const getMedia     = () => S.get('w3l_media')    || [];
+const getAuthors   = () => S.get('w3l_authors')  || [];
+const getMessages  = () => S.get('w3l_messages') || [];
+const getSecrets   = () => S.get('w3l_secrets')  || [];
+const getSettings  = () => S.get('w3l_settings') || {};
+
+const savePosts    = v => S.set('w3l_posts', v);
+const savePages    = v => S.set('w3l_pages', v);
+const saveResearch = v => S.set('w3l_research', v);
+const saveMedia    = v => S.set('w3l_media', v);
+const saveAuthors  = v => S.set('w3l_authors', v);
+const saveMessages = v => S.set('w3l_messages', v);
+const saveSecrets  = v => S.set('w3l_secrets', v);
+const saveSettings = v => S.set('w3l_settings', v);
+
+/* ───────────────────────────────────
+   AUTH / SHA-256
+─────────────────────────────────── */
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-// ── AUTH ─────────────────────────────────────────────────────────────────────
 async function initHash() {
   if (!localStorage.getItem('w3l_pw_hash')) {
     localStorage.setItem('w3l_pw_hash', await sha256('R9252784858r@'));
@@ -439,6 +1440,7 @@ initHash();
 
 async function doLogin() {
   const pw = document.getElementById('pwInput').value;
+  if (!pw) return;
   const hash = await sha256(pw);
   if (!localStorage.getItem('w3l_pw_hash')) {
     localStorage.setItem('w3l_pw_hash', await sha256('R9252784858r@'));
@@ -446,7 +1448,7 @@ async function doLogin() {
   if (hash === localStorage.getItem('w3l_pw_hash')) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('cmsPanel').style.display = 'block';
-    initCMS();
+    bootCMS();
   } else {
     document.getElementById('loginErr').style.display = 'block';
     document.getElementById('pwInput').value = '';
@@ -457,566 +1459,1130 @@ function logout() {
   document.getElementById('cmsPanel').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('pwInput').value = '';
-  document.getElementById('loginErr').style.display = 'none';
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
-let quillInst = null, mediaTarget = null, selectedMedia = null;
-let postAttachments = [], autosaveTimer = null;
-
-function initCMS() {
-  renderPosts(); renderPages(); renderSecrets(); renderMedia(); renderRedirects();
-  initDropZone();
-  const s = lsg('w3l_settings', {});
-  if (s.siteName) document.getElementById('siteNameInput').value = s.siteName;
-  if (s.siteUrl) document.getElementById('siteUrlInput').value = s.siteUrl;
-  if (s.contactEmail) document.getElementById('contactEmailInput').value = s.contactEmail;
+/* ───────────────────────────────────
+   BOOT
+─────────────────────────────────── */
+function bootCMS() {
+  loadSettings();
+  renderDashboard();
+  renderPosts();
+  renderPages();
+  renderResearch();
+  renderMedia();
+  renderAuthors();
+  renderMessages();
+  renderSecrets();
+  updateBadges();
 }
 
-// ── STORAGE HELPERS ──────────────────────────────────────────────────────────
-function lsg(k, def) {
-  try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch(e) { return def; }
-}
-function lss(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+/* ───────────────────────────────────
+   TAB SYSTEM
+─────────────────────────────────── */
+const TAB_TITLES = {
+  dashboard: 'Dashboard',
+  posts: 'Blog Posts',
+  pages: 'Pages',
+  research: 'Research Papers',
+  media: 'Media Library',
+  authors: 'Authors',
+  messages: 'Contact Messages',
+  settings: 'Website Settings',
+  apikeys: 'API Keys'
+};
 
-function getPosts()    { return lsg('w3l_posts',    []); }
-function savePosts(p)  { lss('w3l_posts', p); }
-function getPages()    { return lsg('w3l_pages',    []); }
-function savePages(p)  { lss('w3l_pages', p); }
-function getSecrets()  { return lsg('w3l_secrets',  []); }
-function saveSecrets(s){ lss('w3l_secrets', s); }
-function getMedia()    { return lsg('w3l_media',    []); }
-function saveMedia(m)  { lss('w3l_media', m); }
-function getRedirects(){ return lsg('w3l_redirects',[]); }
-function saveRedirects(r){ lss('w3l_redirects', r); }
+const TAB_ACTIONS = {
+  posts:    () => `<button class="btn btn-gold" onclick="openPostModal()">+ New Post</button>`,
+  pages:    () => `<button class="btn btn-gold" onclick="openPageModal()">+ New Page</button>`,
+  research: () => `<button class="btn btn-gold" onclick="openResearchModal()">+ New Paper</button>`,
+  media:    () => `<button class="btn btn-gold" onclick="document.getElementById('fileUploadInput').click()">⬆ Upload</button>`,
+  authors:  () => `<button class="btn btn-gold" onclick="openAuthorModal()">+ Add Author</button>`,
+  messages: () => `<button class="btn btn-ghost" onclick="openAddMsgModal()">+ Add Test Message</button>`,
+  apikeys:  () => `<button class="btn btn-gold" onclick="openSecretModal()">+ Add Key</button>`
+};
 
-// ── TABS ─────────────────────────────────────────────────────────────────────
-function showTab(tab, btn) {
-  ['posts','pages','media','redirects','secrets','settings'].forEach(t => {
-    const el = document.getElementById('tab-' + t);
-    if (el) el.style.display = t === tab ? 'block' : 'none';
-  });
-  document.querySelectorAll('.cms-nav-item').forEach(b => b.classList.remove('active'));
+function showTab(name, btn) {
+  document.querySelectorAll('.cms-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+  document.getElementById('topbarTitle').textContent = TAB_TITLES[name] || name;
+  const actions = TAB_ACTIONS[name];
+  document.getElementById('topbarActions').innerHTML = actions ? actions() : '';
 }
 
-function switchItab(id, btn) {
-  const box = btn.closest('.modal-box');
-  box.querySelectorAll('.ipanel').forEach(p => p.classList.remove('active'));
-  box.querySelectorAll('.itab').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  if (id === 'ptSEO') { updateSEOScore(); genSchema(); }
-}
+/* ───────────────────────────────────
+   DASHBOARD
+─────────────────────────────────── */
+function renderDashboard() {
+  const posts    = getPosts();
+  const pages    = getPages();
+  const research = getResearch();
+  const media    = getMedia();
+  const authors  = getAuthors();
+  const messages = getMessages();
 
-// ── POSTS ────────────────────────────────────────────────────────────────────
-function renderPosts() {
-  const posts = getPosts();
-  const search = (document.getElementById('postSearch') || {}).value || '';
-  const fSt = (document.getElementById('filterStatus') || {}).value || '';
-  const fCat = (document.getElementById('filterCat') || {}).value || '';
-  const list = posts.filter(p => {
-    if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
-    if (fSt && (p.status || 'draft') !== fSt) return false;
-    if (fCat && p.cat !== fCat) return false;
-    return true;
-  });
-  const cnt = document.getElementById('postsCount');
-  if (cnt) cnt.textContent = list.length + ' of ' + posts.length + ' post' + (posts.length !== 1 ? 's' : '');
-  const el = document.getElementById('postsList');
-  if (!list.length) { el.innerHTML = '<p style="color:var(--white-muted);">No posts match your filter.</p>'; return; }
-  el.innerHTML = list.map(p => {
-    const i = posts.indexOf(p);
-    const sc = p.status === 'published' ? 's-published' : p.status === 'scheduled' ? 's-scheduled' : 's-draft';
-    return `<div class="post-row">
-      <span style="font-size:1.5rem;width:28px;text-align:center;">${p.emoji || '📝'}</span>
-      <div style="flex:1;min-width:0;">
-        <strong style="color:var(--white);font-size:0.9rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.title}</strong>
-        <span style="font-size:0.75rem;color:var(--white-muted);">${p.cat} · ${p.date}${p.author ? ' · ' + p.author : ''} · ${p.readTime || '5 min'}</span>
+  document.getElementById('dashStats').innerHTML = [
+    { icon:'📝', num: posts.length,    label:'Blog Posts' },
+    { icon:'📄', num: pages.length+8,  label:'Pages' },
+    { icon:'📚', num: research.length, label:'Research Papers' },
+    { icon:'📁', num: media.length,    label:'Media Files' },
+    { icon:'👥', num: authors.length,  label:'Authors' },
+    { icon:'💬', num: messages.length, label:'Messages' }
+  ].map(s => `
+    <div class="stat-card">
+      <div class="stat-icon">${s.icon}</div>
+      <div class="stat-num">${s.num}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>`).join('');
+
+  document.getElementById('dashQuick').innerHTML = [
+    { icon:'📝', label:'New Blog Post',    action:"openPostModal()" },
+    { icon:'📚', label:'Add Research Paper', action:"openResearchModal()" },
+    { icon:'⬆',  label:'Upload Media',     action:"showTab('media');document.getElementById('fileUploadInput').click()" },
+    { icon:'📄', label:'Create Page',      action:"openPageModal()" }
+  ].map(q => `
+    <div class="quick-btn" onclick="${q.action}">
+      <div class="quick-btn-icon">${q.icon}</div>
+      <div class="quick-btn-label">${q.label}</div>
+    </div>`).join('');
+
+  const recentPosts = posts.slice(0,5);
+  document.getElementById('dashRecentPosts').innerHTML = recentPosts.length
+    ? recentPosts.map(p => `
+        <div class="data-row" style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+          <div class="row-main">
+            <div class="row-title">${esc(p.title)}</div>
+            <div class="row-sub">${p.cat} · ${p.date}</div>
+          </div>
+          <span class="pill pill-${p.status||'published'}">${p.status||'published'}</span>
+        </div>`).join('')
+    : '<p style="color:var(--white-muted);font-size:0.82rem;padding:1rem 0;">No posts yet.</p>';
+
+  const unreadMsgs = messages.filter(m => !m.read).slice(0,5);
+  document.getElementById('dashRecentMessages').innerHTML = unreadMsgs.length
+    ? unreadMsgs.map(m => `
+        <div class="data-row" style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+          <div class="row-main">
+            <div class="row-title">${esc(m.name)}</div>
+            <div class="row-sub">${esc(m.subject||'No subject')} · ${m.date}</div>
+          </div>
+          <span class="pill pill-unread">unread</span>
+        </div>`).join('')
+    : '<p style="color:var(--white-muted);font-size:0.82rem;padding:1rem 0;">No new messages.</p>';
+
+  const recentMedia = media.slice(-6).reverse();
+  document.getElementById('dashRecentMedia').innerHTML = recentMedia.length
+    ? `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0.5rem;">
+        ${recentMedia.map(f => `
+          <div style="aspect-ratio:1;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.5rem;overflow:hidden;">
+            ${isImage(f.name) ? `<img src="${f.url}" style="width:100%;height:100%;object-fit:cover;">` : fileIcon(f.name)}
+          </div>`).join('')}
+      </div>`
+    : '<p style="color:var(--white-muted);font-size:0.82rem;padding:1rem 0;">No media uploaded yet.</p>';
+
+  const totalSizeKB = media.reduce((a,f) => a + (f.sizeKB||0), 0);
+  const totalSizeMB = (totalSizeKB/1024).toFixed(1);
+  const pct = Math.min((totalSizeKB / (500*1024)) * 100, 100).toFixed(1);
+  document.getElementById('dashStorage').innerHTML = `
+    <div style="margin-bottom:1rem;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+        <span style="font-size:0.82rem;color:var(--white-dim);">Used: <strong style="color:var(--white);">${totalSizeMB} MB</strong></span>
+        <span style="font-size:0.82rem;color:var(--white-muted);">500 MB limit</span>
       </div>
-      <span class="tag-pill">${p.cat}</span>
-      <span class="status-pill ${sc}">${p.status || 'draft'}</span>
-      <button onclick="editPost(${i})" class="btn btn-ghost" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Edit</button>
-      <button onclick="deletePost(${i})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:1rem;" title="Delete">🗑</button>
+      <div class="storage-bar"><div class="storage-fill" style="width:${pct}%;"></div></div>
+      <div style="font-size:0.75rem;color:var(--white-muted);margin-top:0.35rem;">${pct}% of 500 MB used · ${media.length} files</div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--white-muted);">Files are stored as references in local storage. Actual hosting via Cloudflare R2 in production.</p>`;
+}
+
+/* ───────────────────────────────────
+   BLOG POSTS
+─────────────────────────────────── */
+let postFilter = 'all';
+let postSearchQ = '';
+
+function setPostFilter(f, btn) {
+  postFilter = f;
+  document.querySelectorAll('#postFilters .filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPosts();
+}
+
+function filterPosts() {
+  postSearchQ = document.getElementById('postSearch').value.toLowerCase();
+  renderPosts();
+}
+
+function renderPosts() {
+  let posts = getPosts();
+  if (postFilter !== 'all') posts = posts.filter(p => (p.status||'published') === postFilter);
+  if (postSearchQ) posts = posts.filter(p => p.title.toLowerCase().includes(postSearchQ) || (p.excerpt||'').toLowerCase().includes(postSearchQ) || (p.cat||'').toLowerCase().includes(postSearchQ));
+
+  const list = document.getElementById('postsList');
+  if (!posts.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">No posts found</div><div class="empty-sub">${postSearchQ||postFilter!=='all'?'Try a different search or filter.':'Create your first blog post.'}</div><button class="btn btn-gold" onclick="openPostModal()">+ New Post</button></div>`;
+    return;
+  }
+
+  const allPosts = getPosts();
+  list.innerHTML = posts.map(p => {
+    const i = allPosts.findIndex(x => x.slug === p.slug && x.title === p.title);
+    return `
+    <div class="data-row">
+      <div class="row-icon">${p.featured ? '⭐' : '📝'}</div>
+      <div class="row-main">
+        <div class="row-title">${esc(p.title)}</div>
+        <div class="row-sub">${p.cat} · ${p.date} · ${p.readTime||'5 min read'} ${p.author ? '· '+esc(p.author) : ''}</div>
+      </div>
+      <span class="pill pill-cat">${esc(p.cat)}</span>
+      <span class="pill pill-${p.status||'published'}">${p.status||'published'}</span>
+      <div class="row-actions">
+        <button onclick="previewPost(${i})" class="btn btn-ghost btn-sm" title="Preview">👁</button>
+        <button onclick="editPost(${i})" class="btn btn-ghost btn-sm">Edit</button>
+        <button onclick="confirmDelete('Delete "'+encodeTitle(p.title)+'"?','Are you sure you want to delete this post? This cannot be undone.', ()=>deletePost(${i}))" class="btn btn-icon" style="background:none;border:none;color:var(--red);font-size:1rem;">🗑</button>
+      </div>
     </div>`;
   }).join('');
+  updateBadges();
 }
 
 function openPostModal(idx) {
-  if (!quillInst) {
-    quillInst = new Quill('#quillEditor', { theme: 'snow', modules: { toolbar: [[{ header: [1,2,3,false] }], ['bold','italic','underline','strike'], ['blockquote','code-block'], [{ list: 'ordered' }, { list: 'bullet' }], ['link','image'], ['clean']] } });
-    quillInst.on('text-change', () => scheduleAutosave());
-  }
-  postAttachments = [];
-  document.getElementById('postModalTitle').textContent = idx !== undefined ? 'Edit Post' : 'New Blog Post';
-  document.getElementById('editPostSlug').value = idx !== undefined ? idx : '';
-  const fields = ['postTitle','postExcerpt','postSlug','postTags','postAuthor','postReadTime','postEmoji','seoTitle','metaDesc','focusKw','canonUrl','ogTitle','ogDesc','ogImg','twTitle','postSchedule','featImgUrl'];
-  fields.forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
-  ['postStatus','roboIdx','roboFollow','twCard','schemaType'].forEach(id => { const e = document.getElementById(id); if (e) e.selectedIndex = 0; });
-  document.getElementById('schedGrp').style.display = 'none';
-  document.getElementById('featPreview').innerHTML = '<span style="color:var(--white-muted);font-size:0.8rem;">Click to set featured image</span>';
-  if (quillInst) quillInst.setText('');
-  if (idx !== undefined) {
+  const isEdit = idx !== undefined;
+  document.getElementById('postModalTitle').textContent = isEdit ? 'Edit Blog Post' : 'New Blog Post';
+  document.getElementById('editPostIdx').value = isEdit ? idx : '';
+  populateAuthorSelect('postAuthor');
+
+  if (isEdit) {
     const p = getPosts()[idx];
-    document.getElementById('postTitle').value    = p.title || '';
-    document.getElementById('postExcerpt').value  = p.excerpt || '';
-    document.getElementById('postCat').value      = p.cat || 'MiCA';
-    document.getElementById('postEmoji').value    = p.emoji || '';
+    document.getElementById('postTitle').value = p.title;
+    document.getElementById('postSlug').value = p.slug;
+    document.getElementById('postCat').value = p.cat;
+    document.getElementById('postStatus').value = p.status || 'published';
     document.getElementById('postReadTime').value = p.readTime || '';
-    document.getElementById('postSlug').value     = p.slug || '';
-    document.getElementById('postStatus').value   = p.status || 'draft';
-    document.getElementById('postTags').value     = (p.tags || []).join(', ');
-    document.getElementById('postAuthor').value   = p.author || '';
-    document.getElementById('seoTitle').value     = p.seoTitle || '';
-    document.getElementById('metaDesc').value     = p.metaDesc || '';
-    document.getElementById('focusKw').value      = p.focusKw || '';
-    document.getElementById('canonUrl').value     = p.canonUrl || '';
-    document.getElementById('roboIdx').value      = p.roboIdx || 'index';
-    document.getElementById('roboFollow').value   = p.roboFollow || 'follow';
-    document.getElementById('ogTitle').value      = p.ogTitle || '';
-    document.getElementById('ogDesc').value       = p.ogDesc || '';
-    document.getElementById('ogImg').value        = p.ogImg || '';
-    document.getElementById('twCard').value       = p.twCard || 'summary_large_image';
-    document.getElementById('twTitle').value      = p.twTitle || '';
-    document.getElementById('schemaType').value   = p.schemaType || 'Article';
-    document.getElementById('featImgUrl').value   = p.featImg || '';
-    if (p.featImg) setFeatPreview(p.featImg);
-    if (p.scheduleDate) { document.getElementById('postSchedule').value = p.scheduleDate; document.getElementById('schedGrp').style.display = 'block'; }
-    if (quillInst) quillInst.root.innerHTML = p.body || '';
-    postAttachments = p.attachments || [];
+    document.getElementById('postDate').value = p.dateISO || '';
+    document.getElementById('postSeoTitle').value = p.seoTitle || '';
+    document.getElementById('postMeta').value = p.meta || '';
+    document.getElementById('postExcerpt').value = p.excerpt;
+    document.getElementById('postFeaturedImage').value = p.image || '';
+    document.getElementById('postAttachment').value = p.attachment || '';
+    document.getElementById('postBody').innerHTML = p.body || '';
+    document.getElementById('postFeatured').checked = !!p.featured;
+    document.getElementById('postAuthor').value = p.author || '';
+    if (p.image) { const pv=document.getElementById('postFeaturedPreview'); pv.src=p.image; pv.style.display='block'; }
+  } else {
+    ['postTitle','postSlug','postReadTime','postDate','postSeoTitle','postMeta','postExcerpt','postFeaturedImage','postAttachment'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('postBody').innerHTML='';
+    document.getElementById('postFeatured').checked=false;
+    document.getElementById('postStatus').value='published';
+    document.getElementById('postDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('postFeaturedPreview').style.display='none';
   }
-  renderAttachments(); updateSerp(); updateOG();
-  cc('postTitle','tcCount',60); cc('seoTitle','stCount',60); cc('metaDesc','mdCount',160);
-  document.querySelectorAll('#postModal .ipanel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('#postModal .itab').forEach(b => b.classList.remove('active'));
-  document.getElementById('ptContent').classList.add('active');
-  document.querySelector('#postModal .itab').classList.add('active');
-  document.getElementById('asDot').className = 'as-dot';
-  document.getElementById('asText').textContent = 'Unsaved';
   document.getElementById('postModal').classList.add('open');
 }
 
 function editPost(i) { openPostModal(i); }
 
 function deletePost(i) {
-  if (!confirm('Delete this post?')) return;
-  const posts = getPosts(); posts.splice(i, 1); savePosts(posts); renderPosts();
+  const posts = getPosts(); posts.splice(i,1); savePosts(posts); renderPosts(); renderDashboard();
+  showToast('Post deleted.', 'error');
+}
+
+function previewPost(i) {
+  const p = getPosts()[i];
+  if (!p) return;
+  const html = `<!DOCTYPE html><html><head><title>${esc(p.title)}</title><style>body{font-family:system-ui;max-width:800px;margin:2rem auto;padding:1rem;background:#0a0a0b;color:#f0f0f2;}h1{color:#D4AF37;}h2,h3{color:#f0f0f2;}</style></head><body><h1>${esc(p.title)}</h1><p style="color:#6b6b76;">${p.cat} · ${p.date} · ${p.readTime||'5 min read'}</p><p>${esc(p.excerpt)}</p><hr style="border-color:#1f1f24;margin:1.5rem 0;">${p.body||''}</body></html>`;
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
 }
 
 function savePost(statusOverride) {
-  const title = document.getElementById('postTitle').value.trim();
+  const title   = document.getElementById('postTitle').value.trim();
   const excerpt = document.getElementById('postExcerpt').value.trim();
-  if (!title || !excerpt) { alert('Title and excerpt are required.'); return; }
+  if (!title)   { showToast('Title is required.', 'error'); return; }
+  if (!excerpt) { showToast('Excerpt is required.', 'error'); return; }
+
   const posts = getPosts();
-  const idx = document.getElementById('editPostSlug').value;
-  const slug = document.getElementById('postSlug').value || slugify(title);
-  const now = new Date();
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const status = statusOverride || document.getElementById('postStatus').value || 'draft';
-  const tags = document.getElementById('postTags').value.split(',').map(t => t.trim()).filter(Boolean);
+  const idx   = document.getElementById('editPostIdx').value;
+  const dateVal= document.getElementById('postDate').value;
+  const dateISO= dateVal || new Date().toISOString().split('T')[0];
+  const d     = new Date(dateISO);
+  const months= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const displayDate = months[d.getMonth()] + ' ' + d.getFullYear();
+  const slugInput = document.getElementById('postSlug').value.trim();
+  const slug = slugInput || slugify(title);
+
   const post = {
-    slug, title, excerpt, status, tags,
-    cat:          document.getElementById('postCat').value,
-    emoji:        document.getElementById('postEmoji').value || '📝',
-    readTime:     document.getElementById('postReadTime').value || calcRT(quillInst ? quillInst.getText() : ''),
-    date:         months[now.getMonth()] + ' ' + now.getFullYear(),
-    author:       document.getElementById('postAuthor').value,
-    body:         quillInst ? quillInst.root.innerHTML : '',
-    scheduleDate: document.getElementById('postSchedule').value || '',
-    seoTitle:     document.getElementById('seoTitle').value,
-    metaDesc:     document.getElementById('metaDesc').value,
-    focusKw:      document.getElementById('focusKw').value,
-    canonUrl:     document.getElementById('canonUrl').value,
-    roboIdx:      document.getElementById('roboIdx').value,
-    roboFollow:   document.getElementById('roboFollow').value,
-    ogTitle:      document.getElementById('ogTitle').value,
-    ogDesc:       document.getElementById('ogDesc').value,
-    ogImg:        document.getElementById('ogImg').value,
-    twCard:       document.getElementById('twCard').value,
-    twTitle:      document.getElementById('twTitle').value,
-    schemaType:   document.getElementById('schemaType').value,
-    featImg:      document.getElementById('featImgUrl').value,
-    attachments:  postAttachments
+    slug, title,
+    cat:        document.getElementById('postCat').value,
+    status:     statusOverride || document.getElementById('postStatus').value,
+    readTime:   document.getElementById('postReadTime').value || '5 min read',
+    date:       displayDate,
+    dateISO,
+    seoTitle:   document.getElementById('postSeoTitle').value,
+    meta:       document.getElementById('postMeta').value,
+    excerpt,
+    body:       document.getElementById('postBody').innerHTML,
+    image:      document.getElementById('postFeaturedImage').value,
+    attachment: document.getElementById('postAttachment').value,
+    featured:   document.getElementById('postFeatured').checked,
+    author:     document.getElementById('postAuthor').value
   };
-  if (idx !== '') { posts[parseInt(idx)] = post; } else { posts.unshift(post); document.getElementById('editPostSlug').value = '0'; }
-  savePosts(posts); renderPosts();
-  document.getElementById('asDot').className = 'as-dot saved';
-  document.getElementById('asText').textContent = 'Saved';
-  showToast(status === 'published' ? 'Post published!' : 'Draft saved');
+
+  if (idx !== '') { posts[parseInt(idx)] = post; } else { posts.unshift(post); }
+  savePosts(posts);
+  renderPosts(); renderDashboard();
+  closeModal('postModal');
+  showToast(post.status === 'published' ? 'Post published! ✓' : 'Draft saved.');
 }
 
-function scheduleAutosave() {
-  document.getElementById('asDot').className = 'as-dot saving';
-  document.getElementById('asText').textContent = 'Saving…';
-  clearTimeout(autosaveTimer);
-  autosaveTimer = setTimeout(() => {
-    if (document.getElementById('postTitle').value.trim()) savePost();
-    else { document.getElementById('asDot').className = 'as-dot'; document.getElementById('asText').textContent = 'Unsaved'; }
-  }, 3000);
+/* ───────────────────────────────────
+   PAGES
+─────────────────────────────────── */
+const BUILTIN_PAGES = [
+  {title:'Home',          slug:'index',          locked:true},
+  {title:'Services',      slug:'services',        locked:true},
+  {title:'About',         slug:'about',           locked:true},
+  {title:'Blog',          slug:'blog',            locked:true},
+  {title:'Research',      slug:'research',        locked:true},
+  {title:'Crypto Countries',slug:'crypto-countries',locked:true},
+  {title:'Compliance Hub',slug:'compliance',      locked:true},
+  {title:'Contact',       slug:'contact',         locked:true}
+];
+
+let pageSearchQ = '';
+function filterPages() {
+  pageSearchQ = document.getElementById('pageSearch').value.toLowerCase();
+  renderPages();
 }
 
-function previewPost() {
-  const title = document.getElementById('postTitle').value || 'Untitled';
-  const body = quillInst ? quillInst.root.innerHTML : '';
-  const excerpt = document.getElementById('postExcerpt').value;
-  const img = document.getElementById('featImgUrl').value;
-  document.getElementById('previewContent').innerHTML =
-    (img ? `<img src="${img}" style="width:100%;max-height:260px;object-fit:cover;border-radius:4px;margin-bottom:1rem;">` : '') +
-    `<h1 style="font-size:1.6rem;margin-bottom:0.75rem;">${title}</h1>` +
-    `<p style="color:#666;margin-bottom:1rem;border-bottom:1px solid #eee;padding-bottom:1rem;">${excerpt}</p>` +
-    `<div style="line-height:1.8;">${body}</div>`;
-  document.getElementById('previewModal').classList.add('open');
-}
-
-// ── PAGES ────────────────────────────────────────────────────────────────────
 function renderPages() {
-  const pages = getPages();
-  const builtIn = [
-    {title:'Home',slug:'index',locked:true},{title:'Services',slug:'services',locked:true},
-    {title:'About',slug:'about',locked:true},{title:'Blog',slug:'blog',locked:true},
-    {title:'Research',slug:'research',locked:true},{title:'Crypto Countries',slug:'crypto-countries',locked:true},
-    {title:'Compliance Hub',slug:'compliance',locked:true},{title:'Contact',slug:'contact',locked:true}
-  ];
-  const all = [...builtIn, ...pages];
-  document.getElementById('pagesList').innerHTML = all.map((p, i) => `
-    <div class="post-row">
-      <span style="font-size:1.5rem;">📄</span>
-      <div style="flex:1;">
-        <strong style="color:var(--white);font-size:0.9rem;">${p.title}</strong>
-        <span style="font-size:0.75rem;color:var(--white-muted);display:block;">/pages/${p.slug}.html</span>
+  const custom = getPages();
+  const all    = [...BUILTIN_PAGES, ...custom];
+  let visible  = all;
+  if (pageSearchQ) visible = all.filter(p => p.title.toLowerCase().includes(pageSearchQ) || p.slug.toLowerCase().includes(pageSearchQ));
+
+  const list = document.getElementById('pagesList');
+  if (!visible.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><div class="empty-title">No pages found</div></div>'; return; }
+
+  list.innerHTML = visible.map((p, vi) => {
+    const customIdx = custom.findIndex(c => c.slug === p.slug && c.title === p.title);
+    return `
+    <div class="data-row">
+      <div class="row-icon">📄</div>
+      <div class="row-main">
+        <div class="row-title">${esc(p.title)}</div>
+        <div class="row-sub">/pages/${p.slug}.html</div>
       </div>
-      ${p.locked ? '<span class="tag-pill">Built-in</span>' : `
-        <button onclick="editPage(${i - builtIn.length})" class="btn btn-ghost" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Edit</button>
-        <button onclick="deletePage(${i - builtIn.length})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:1rem;">🗑</button>`}
-    </div>`).join('');
+      ${p.locked ? '<span class="pill pill-builtin">Built-in</span>' : ''}
+      <div class="row-actions">
+        ${!p.locked ? `<button onclick="editPage(${customIdx})" class="btn btn-ghost btn-sm">Edit</button>` : ''}
+        ${!p.locked ? `<button onclick="confirmDelete('Delete page?','Delete the page &ldquo;${esc(p.title)}&rdquo;?', ()=>deletePage(${customIdx}))" class="btn btn-icon" style="background:none;border:none;color:var(--red);font-size:1rem;">🗑</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function openPageModal(idx) {
-  document.getElementById('pageModalTitle').textContent = idx !== undefined ? 'Edit Page' : 'New Page';
-  document.getElementById('editPageSlug').value = idx !== undefined ? idx : '';
-  ['pageTitle','pageSlug','pageMeta','pageContent'].forEach(id => document.getElementById(id).value = '');
-  if (idx !== undefined) {
+  const isEdit = idx !== undefined;
+  document.getElementById('pageModalTitle').textContent = isEdit ? 'Edit Page' : 'New Page';
+  document.getElementById('editPageIdx').value = isEdit ? idx : '';
+  if (isEdit) {
     const p = getPages()[idx];
-    document.getElementById('pageTitle').value   = p.title;
-    document.getElementById('pageSlug').value    = p.slug;
-    document.getElementById('pageMeta').value    = p.meta || '';
-    document.getElementById('pageContent').value = p.content || '';
+    document.getElementById('pageTitle').value    = p.title;
+    document.getElementById('pageSlug').value     = p.slug;
+    document.getElementById('pageSeoTitle').value = p.seoTitle||'';
+    document.getElementById('pageMeta').value     = p.meta||'';
+    document.getElementById('pageContent').value  = p.content||'';
+  } else {
+    ['pageTitle','pageSlug','pageSeoTitle','pageMeta','pageContent'].forEach(id => document.getElementById(id).value='');
   }
   document.getElementById('pageModal').classList.add('open');
 }
 
 function editPage(i) { openPageModal(i); }
-
 function deletePage(i) {
-  if (!confirm('Delete this page?')) return;
-  const pages = getPages(); pages.splice(i, 1); savePages(pages); renderPages();
+  const pages = getPages(); pages.splice(i,1); savePages(pages); renderPages(); renderDashboard();
+  showToast('Page deleted.', 'error');
 }
 
 function savePage() {
   const title = document.getElementById('pageTitle').value.trim();
-  if (!title) { alert('Title is required.'); return; }
+  if (!title) { showToast('Title is required.', 'error'); return; }
   const pages = getPages();
-  const idx = document.getElementById('editPageSlug').value;
-  const page = {
+  const idx   = document.getElementById('editPageIdx').value;
+  const page  = {
     title,
-    slug: document.getElementById('pageSlug').value || title.toLowerCase().replace(/\s+/g, '-'),
-    meta: document.getElementById('pageMeta').value,
-    content: document.getElementById('pageContent').value
+    slug:     document.getElementById('pageSlug').value.trim() || slugify(title),
+    seoTitle: document.getElementById('pageSeoTitle').value,
+    meta:     document.getElementById('pageMeta').value,
+    content:  document.getElementById('pageContent').value
   };
   if (idx !== '') { pages[parseInt(idx)] = page; } else { pages.push(page); }
-  savePages(pages); renderPages(); closeModal('pageModal');
-  showToast('Page saved!');
+  savePages(pages); renderPages(); renderDashboard();
+  closeModal('pageModal');
+  showToast('Page saved! ✓');
 }
 
-// ── MEDIA ────────────────────────────────────────────────────────────────────
-const FICONS = { pdf:'📄', doc:'📝', docx:'📝', xlsx:'📊', pptx:'📊', zip:'🗜️', svg:'🖼️', default:'📁' };
+/* ───────────────────────────────────
+   RESEARCH PAPERS
+─────────────────────────────────── */
+let researchFilter = 'all';
+let researchSearchQ = '';
 
-function handleUpload(files) {
-  const media = getMedia(); let done = 0;
-  Array.from(files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const ext = file.name.split('.').pop().toLowerCase();
-      const isImg = ['png','jpg','jpeg','gif','webp','svg'].includes(ext);
-      media.unshift({ id: Date.now() + Math.random(), name: file.name, type: isImg ? 'image' : 'file', ext, size: fmtSize(file.size), url: e.target.result, uploadedAt: new Date().toISOString() });
-      done++;
-      if (done === files.length) { saveMedia(media); renderMedia(); showToast(done + ' file' + (done > 1 ? 's' : '') + ' uploaded'); }
-    };
-    reader.readAsDataURL(file);
-  });
+function setResearchFilter(f, btn) {
+  researchFilter = f;
+  document.querySelectorAll('#researchFilters .filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderResearch();
+}
+function filterResearch() {
+  researchSearchQ = document.getElementById('researchSearch').value.toLowerCase();
+  renderResearch();
+}
+
+function renderResearch() {
+  let papers = getResearch();
+  if (researchFilter === 'featured') papers = papers.filter(p => p.featured);
+  if (researchSearchQ) papers = papers.filter(p => p.title.toLowerCase().includes(researchSearchQ) || (p.country||'').toLowerCase().includes(researchSearchQ) || (p.topic||'').toLowerCase().includes(researchSearchQ));
+
+  const list = document.getElementById('researchList');
+  if (!papers.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">No research papers yet</div><div class="empty-sub">Add your first research paper.</div><button class="btn btn-gold" onclick="openResearchModal()">+ New Paper</button></div>`;
+    return;
+  }
+
+  const allPapers = getResearch();
+  list.innerHTML = papers.map(p => {
+    const i = allPapers.findIndex(x => x.title === p.title && x.dateISO === p.dateISO);
+    return `
+    <div class="data-row">
+      <div class="row-icon">${p.featured ? '⭐' : '📚'}</div>
+      <div class="row-main">
+        <div class="row-title">${esc(p.title)}</div>
+        <div class="row-sub">${[p.country, p.topic, p.date, p.author].filter(Boolean).map(esc).join(' · ')}</div>
+      </div>
+      ${p.country ? `<span class="pill pill-cat">${esc(p.country)}</span>` : ''}
+      ${p.featured ? '<span class="pill pill-featured">Featured</span>' : ''}
+      <div class="row-actions">
+        ${p.pdf ? `<a href="${p.pdf}" target="_blank" class="btn btn-ghost btn-sm">⬇ PDF</a>` : ''}
+        <button onclick="editResearch(${i})" class="btn btn-ghost btn-sm">Edit</button>
+        <button onclick="confirmDelete('Delete paper?','Delete &ldquo;${esc(p.title)}&rdquo;?', ()=>deleteResearch(${i}))" class="btn btn-icon" style="background:none;border:none;color:var(--red);font-size:1rem;">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+  updateBadges();
+}
+
+function openResearchModal(idx) {
+  const isEdit = idx !== undefined;
+  document.getElementById('researchModalTitle').textContent = isEdit ? 'Edit Research Paper' : 'New Research Paper';
+  document.getElementById('editResearchIdx').value = isEdit ? idx : '';
+  populateAuthorSelect('researchAuthor');
+  if (isEdit) {
+    const p = getResearch()[idx];
+    document.getElementById('researchTitle').value    = p.title;
+    document.getElementById('researchCountry').value  = p.country||'';
+    document.getElementById('researchTopic').value    = p.topic||'';
+    document.getElementById('researchDate').value     = p.dateISO||'';
+    document.getElementById('researchAuthor').value   = p.author||'';
+    document.getElementById('researchKeywords').value = p.keywords||'';
+    document.getElementById('researchPdf').value      = p.pdf||'';
+    document.getElementById('researchCover').value    = p.cover||'';
+    document.getElementById('researchDesc').value     = p.desc||'';
+    document.getElementById('researchFeatured').checked = !!p.featured;
+    if (p.cover) { const cv=document.getElementById('researchCoverPreview'); cv.src=p.cover; cv.style.display='block'; }
+  } else {
+    ['researchTitle','researchCountry','researchTopic','researchDate','researchKeywords','researchPdf','researchCover','researchDesc'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('researchFeatured').checked=false;
+    document.getElementById('researchDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('researchCoverPreview').style.display='none';
+  }
+  document.getElementById('researchModal').classList.add('open');
+}
+
+function editResearch(i) { openResearchModal(i); }
+function deleteResearch(i) {
+  const papers = getResearch(); papers.splice(i,1); saveResearch(papers); renderResearch(); renderDashboard();
+  showToast('Paper deleted.', 'error');
+}
+
+function saveResearch() {
+  const title = document.getElementById('researchTitle').value.trim();
+  const desc  = document.getElementById('researchDesc').value.trim();
+  if (!title) { showToast('Title is required.', 'error'); return; }
+  const papers = getResearch();
+  const idx    = document.getElementById('editResearchIdx').value;
+  const dateVal= document.getElementById('researchDate').value;
+  const d      = dateVal ? new Date(dateVal) : new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  const paper = {
+    title,
+    country:  document.getElementById('researchCountry').value,
+    topic:    document.getElementById('researchTopic').value,
+    author:   document.getElementById('researchAuthor').value,
+    keywords: document.getElementById('researchKeywords').value,
+    pdf:      document.getElementById('researchPdf').value,
+    cover:    document.getElementById('researchCover').value,
+    desc,
+    featured: document.getElementById('researchFeatured').checked,
+    dateISO:  dateVal,
+    date:     months[d.getMonth()] + ' ' + d.getFullYear()
+  };
+
+  if (idx !== '') { papers[parseInt(idx)] = paper; } else { papers.unshift(paper); }
+  saveResearch(papers); renderResearch(); renderDashboard();
+  closeModal('researchModal');
+  showToast('Research paper saved! ✓');
+}
+
+/* ───────────────────────────────────
+   MEDIA LIBRARY
+─────────────────────────────────── */
+let mediaView = 'grid';
+let mediaSearchQ = '';
+let mediaPickerTarget = null;
+let mediaPickerSelected = null;
+
+function setMediaView(v) {
+  mediaView = v;
+  document.getElementById('mediaGrid').style.display = v==='grid' ? 'grid' : 'none';
+  document.getElementById('mediaList').style.display = v==='list' ? 'block' : 'none';
+  document.getElementById('mediaViewGrid').classList.toggle('active', v==='grid');
+  document.getElementById('mediaViewList').classList.toggle('active', v==='list');
+  renderMedia();
+}
+
+function filterMedia() {
+  mediaSearchQ = document.getElementById('mediaSearch').value.toLowerCase();
+  renderMedia();
 }
 
 function renderMedia() {
-  const media = getMedia();
-  const cnt = document.getElementById('mediaCount');
-  if (cnt) cnt.textContent = media.length + ' file' + (media.length !== 1 ? 's' : '');
-  const grid = document.getElementById('mediaGrid');
-  if (!grid) return;
-  grid.innerHTML = media.map((m, i) => `
-    <div class="media-item" title="${m.name}" ondblclick="deleteMediaItem(${i})">
-      ${m.type === 'image' ? `<img src="${m.url}" class="media-thumb" alt="${m.name}">` : `<div class="media-icon">${FICONS[m.ext] || FICONS.default}</div>`}
-      <div class="media-name">${m.name}</div>
-    </div>`).join('');
-}
+  let files = getMedia();
+  if (mediaSearchQ) files = files.filter(f => f.name.toLowerCase().includes(mediaSearchQ));
 
-function deleteMediaItem(i) {
-  if (!confirm('Delete this file?')) return;
-  const m = getMedia(); m.splice(i, 1); saveMedia(m); renderMedia();
-}
-
-function initDropZone() {
-  const z = document.getElementById('dropZone'); if (!z) return;
-  z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('drag'); });
-  z.addEventListener('dragleave', () => z.classList.remove('drag'));
-  z.addEventListener('drop', e => { e.preventDefault(); z.classList.remove('drag'); handleUpload(e.dataTransfer.files); });
-}
-
-function openMediaPicker(target) {
-  mediaTarget = target; selectedMedia = null;
-  const media = getMedia();
-  document.getElementById('mpGrid').innerHTML = media.map((m, i) => `
-    <div class="media-item" id="mp${i}" onclick="selectMedia(${i})">
-      ${m.type === 'image' ? `<img src="${m.url}" class="media-thumb" alt="${m.name}">` : `<div class="media-icon">${FICONS[m.ext] || FICONS.default}</div>`}
-      <div class="media-name">${m.name}</div>
-    </div>`).join('');
-  document.getElementById('mpModal').classList.add('open');
-}
-
-function selectMedia(i) {
-  document.querySelectorAll('#mpGrid .media-item').forEach(el => el.classList.remove('sel'));
-  const el = document.getElementById('mp' + i); if (el) el.classList.add('sel');
-  selectedMedia = i;
-}
-
-function confirmPick() {
-  if (selectedMedia === null) { showToast('Select a file first'); return; }
-  const m = getMedia()[selectedMedia];
-  if (mediaTarget === 'featured') {
-    setFeatPreview(m.url); document.getElementById('featImgUrl').value = m.url;
-  } else if (mediaTarget === 'editor' && quillInst) {
-    const r = quillInst.getSelection(true);
-    if (m.type === 'image') quillInst.insertEmbed(r.index, 'image', m.url);
-    else quillInst.insertText(r.index, '[' + m.name + ']');
-  } else if (mediaTarget === 'attach') {
-    if (!postAttachments.find(a => a.url === m.url)) postAttachments.push({ name: m.name, url: m.url, ext: m.ext, size: m.size });
-    renderAttachments();
+  if (mediaView === 'grid') {
+    const grid = document.getElementById('mediaGrid');
+    if (!files.length) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">📁</div><div class="empty-title">Media Library is empty</div><div class="empty-sub">Upload files using drag & drop or the Upload button.</div></div>';
+      return;
+    }
+    grid.innerHTML = files.map((f, i) => `
+      <div class="media-item" onclick="selectMediaItem(${i}, this)">
+        <div class="media-thumb">
+          ${isImage(f.name) ? `<img src="${f.url}" alt="${esc(f.name)}" loading="lazy" onerror="this.parentElement.innerHTML=fileIconHtml('${f.name}')">` : fileIconHtml(f.name)}
+        </div>
+        <div class="media-info">
+          <div class="media-name" title="${esc(f.name)}">${esc(f.name)}</div>
+          <div class="media-meta">${f.sizeKB ? f.sizeKB+'KB' : '—'} · ${f.date||''}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    const list = document.getElementById('mediaList');
+    if (!files.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><div class="empty-title">No files found</div></div>'; return; }
+    list.innerHTML = files.map((f, i) => `
+      <div class="data-row">
+        <div class="row-icon">${fileIconHtml(f.name)}</div>
+        <div class="row-main">
+          <div class="row-title">${esc(f.name)}</div>
+          <div class="row-sub">${f.type||''} · ${f.sizeKB ? f.sizeKB+'KB' : '—'} · ${f.date||''}</div>
+        </div>
+        <div class="row-actions">
+          <button onclick="copyMediaUrl(${i})" class="btn btn-ghost btn-sm">Copy URL</button>
+          <a href="${f.url}" download="${f.name}" class="btn btn-ghost btn-sm">⬇</a>
+          <button onclick="confirmDelete('Delete file?','Delete &ldquo;${esc(f.name)}&rdquo;? This cannot be undone.',()=>deleteMedia(${i}))" class="btn btn-icon" style="background:none;border:none;color:var(--red);">🗑</button>
+        </div>
+      </div>`).join('');
   }
-  closeModal('mpModal'); showToast('File selected');
 }
 
-function setFeatPreview(url) {
-  const isImg = url.startsWith('data:image') || ['png','jpg','jpeg','gif','webp','svg'].includes((url.split('.').pop() || '').toLowerCase());
-  document.getElementById('featPreview').innerHTML = isImg
-    ? `<img src="${url}" style="width:100%;height:110px;object-fit:cover;">`
-    : `<div style="padding:1rem;color:var(--white-muted);font-size:0.8rem;">📄 ${url.split('/').pop()}</div>`;
+let selectedMediaIdx = null;
+function selectMediaItem(i, el) {
+  document.querySelectorAll('.media-item').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedMediaIdx = i;
 }
 
-function clearFeatImg() {
-  document.getElementById('featImgUrl').value = '';
-  document.getElementById('featPreview').innerHTML = '<span style="color:var(--white-muted);font-size:0.8rem;">Click to set featured image</span>';
+function copyMediaUrl(i) {
+  const f = getMedia()[i];
+  if (!f) return;
+  navigator.clipboard.writeText(f.url).then(() => showToast('URL copied!'));
 }
 
-function renderAttachments() {
-  document.getElementById('attachList').innerHTML = postAttachments.map((a, i) => `
-    <div class="attach-item">
-      <span>${FICONS[a.ext] || '📁'}</span>
-      <span style="flex:1;color:var(--white-muted);">${a.name} <span style="color:#555;">(${a.size})</span></span>
-      <button onclick="postAttachments.splice(${i},1);renderAttachments()" style="border:none;background:none;color:#e74c3c;cursor:pointer;font-size:0.78rem;">✕</button>
-    </div>`).join('');
+function deleteMedia(i) {
+  const media = getMedia(); media.splice(i,1); saveMedia(media);
+  renderMedia(); renderDashboard();
+  showToast('File deleted.', 'error');
 }
 
-// ── REDIRECTS ────────────────────────────────────────────────────────────────
-function renderRedirects() {
-  const r = getRedirects(); const el = document.getElementById('redirectsList'); if (!el) return;
-  if (!r.length) { el.innerHTML = '<p style="color:var(--white-muted);">No redirects configured.</p>'; return; }
-  el.innerHTML = r.map((rd, i) => `
-    <div class="redir-row">
-      <span style="color:var(--white-muted);flex:1;">${rd.from}</span>
-      <span style="color:#555;">→</span>
-      <span style="color:var(--gold);flex:1;">${rd.to}</span>
-      <span class="tag-pill">${rd.type}</span>
-      <button onclick="deleteRedirect(${i})" style="background:none;border:none;color:#e74c3c;cursor:pointer;">🗑</button>
-    </div>`).join('');
+/* DRAG & DROP */
+function handleDragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('drag-over'); }
+function handleDragLeave() { document.getElementById('dropZone').classList.remove('drag-over'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  processFiles(Array.from(e.dataTransfer.files));
+}
+function handleFileSelect(e) { processFiles(Array.from(e.target.files)); e.target.value=''; }
+
+function processFiles(files) {
+  const allowedExt = ['pdf','doc','docx','xls','xlsx','ppt','pptx','png','jpg','jpeg','webp','svg','gif','zip'];
+  files.forEach(file => {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!allowedExt.includes(ext)) { showToast(`Unsupported: ${ext}`, 'error'); return; }
+    simulateUpload(file);
+  });
 }
 
-function addRedirect() {
-  const from = prompt('From URL (e.g. /old-page):'); if (!from) return;
-  const to = prompt('To URL (e.g. /new-page):'); if (!to) return;
-  const type = prompt('Type: 301 or 302', '301') || '301';
-  const r = getRedirects(); r.push({ from, to, type }); saveRedirects(r); renderRedirects(); showToast('Redirect added');
+function simulateUpload(file) {
+  const progressList = document.getElementById('uploadProgressList');
+  const id = 'up_' + Date.now() + Math.random().toString(36).slice(2);
+  const div = document.createElement('div');
+  div.className = 'upload-progress-item';
+  div.id = id;
+  div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem;">
+      <span style="color:var(--white);">${esc(file.name)}</span>
+      <span style="color:var(--white-muted);" id="${id}_pct">0%</span>
+    </div>
+    <div class="upload-progress-bar"><div class="upload-progress-fill" id="${id}_fill" style="width:0%;"></div></div>`;
+  progressList.appendChild(div);
+
+  let pct = 0;
+  const interval = setInterval(() => {
+    pct = Math.min(pct + Math.random()*25 + 5, 100);
+    document.getElementById(id+'_fill').style.width = pct + '%';
+    document.getElementById(id+'_pct').textContent = Math.floor(pct) + '%';
+    if (pct >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        div.remove();
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const media = getMedia();
+          media.push({
+            name:   file.name,
+            type:   file.type || ext2type(file.name),
+            sizeKB: Math.round(file.size / 1024),
+            url:    ev.target.result,
+            date:   new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})
+          });
+          saveMedia(media);
+          renderMedia(); renderDashboard();
+          showToast(`Uploaded: ${file.name} ✓`);
+        };
+        reader.readAsDataURL(file);
+      }, 400);
+    }
+  }, 80);
 }
 
-function deleteRedirect(i) {
-  if (!confirm('Delete?')) return;
-  const r = getRedirects(); r.splice(i, 1); saveRedirects(r); renderRedirects();
+function openMediaPicker(targetId) {
+  mediaPickerTarget = targetId;
+  mediaPickerSelected = null;
+  document.getElementById('pickerSearch').value = '';
+  renderMediaPicker();
+  document.getElementById('mediaPickerModal').classList.add('open');
 }
 
-// ── SEO ──────────────────────────────────────────────────────────────────────
-function cc(inputId, countId, max) {
-  const el = document.getElementById(inputId); const c = document.getElementById(countId); if (!el || !c) return;
-  const len = el.value.length; c.textContent = len + ' / ' + max;
-  c.className = 'char-c' + (len > max ? ' over' : len > max * 0.85 ? ' warn' : '');
+function renderMediaPicker() {
+  const q = document.getElementById('pickerSearch').value.toLowerCase();
+  let files = getMedia();
+  if (q) files = files.filter(f => f.name.toLowerCase().includes(q));
+  const grid = document.getElementById('mediaPickerGrid');
+  const empty = document.getElementById('mediaPickerEmpty');
+  if (!files.length) { grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  const allFiles = getMedia();
+  grid.innerHTML = files.map(f => {
+    const i = allFiles.findIndex(x => x.url===f.url);
+    return `<div class="media-mini-item ${mediaPickerSelected===i?'selected':''}" onclick="selectPickerItem(${i}, this)">
+      ${isImage(f.name) ? `<img src="${f.url}" alt="${esc(f.name)}" loading="lazy">` : fileIconHtml(f.name)}
+    </div>`;
+  }).join('');
 }
 
-function updateSerp() {
-  const title = document.getElementById('seoTitle').value || document.getElementById('postTitle').value || 'Post title';
-  const desc  = document.getElementById('metaDesc').value || document.getElementById('postExcerpt').value || 'Meta description…';
-  const slug  = document.getElementById('postSlug').value || slugify(document.getElementById('postTitle').value || '');
-  document.getElementById('serpUrl').textContent   = 'web3legals.com › blog › ' + (slug || 'post-slug');
-  document.getElementById('serpTitle').textContent = title.substring(0, 60);
-  document.getElementById('serpDesc').textContent  = desc.substring(0, 160);
+function selectPickerItem(i, el) {
+  document.querySelectorAll('.media-mini-item').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  mediaPickerSelected = i;
 }
 
-function updateSEOScore() {
-  const title   = document.getElementById('postTitle').value || '';
-  const meta    = document.getElementById('metaDesc').value || '';
-  const kw      = (document.getElementById('focusKw').value || '').toLowerCase();
-  const body    = quillInst ? quillInst.getText() : '';
-  const excerpt = document.getElementById('postExcerpt').value || '';
-  const checks = [
-    { l: 'Title is 40–60 characters',              p: title.length >= 40 && title.length <= 60 },
-    { l: 'Meta description is 120–160 characters', p: meta.length >= 120 && meta.length <= 160 },
-    { l: 'Focus keyword set',                      p: kw.length > 0 },
-    { l: 'Keyword in title',                       p: !!kw && title.toLowerCase().includes(kw) },
-    { l: 'Keyword in meta description',            p: !!kw && meta.toLowerCase().includes(kw) },
-    { l: 'Keyword in content',                     p: !!kw && body.toLowerCase().includes(kw) },
-    { l: 'Content is at least 300 words',          p: body.trim().split(/\s+/).length >= 300 },
-    { l: 'Excerpt filled',                         p: excerpt.length > 50 },
-    { l: 'Featured image set',                     p: !!(document.getElementById('featImgUrl') || {}).value }
-  ];
-  const score = Math.round(checks.filter(c => c.p).length / checks.length * 100);
-  const fill = document.getElementById('seoFill');
-  fill.style.width = score + '%';
-  fill.style.background = score >= 80 ? '#2ecc71' : score >= 50 ? '#e67e22' : '#e74c3c';
-  document.getElementById('seoScoreTxt').textContent = 'Score: ' + score + ' / 100';
-  document.getElementById('seoChecks').innerHTML = checks.map(c =>
-    `<div class="seo-item"><span class="seo-dot ${c.p ? 'd-green' : 'd-red'}"></span><span style="color:${c.p ? '#888' : 'var(--white-muted)'};">${c.l}</span></div>`
-  ).join('');
+function confirmMediaPick() {
+  if (mediaPickerSelected === null) { showToast('Select a file first.', 'error'); return; }
+  const f = getMedia()[mediaPickerSelected];
+  if (!f || !mediaPickerTarget) return;
+  const input = document.getElementById(mediaPickerTarget);
+  if (input) {
+    input.value = f.url;
+    input.dispatchEvent(new Event('input'));
+  }
+  const previewMap = { postFeaturedImage:'postFeaturedPreview', researchCover:'researchCoverPreview' };
+  if (previewMap[mediaPickerTarget] && isImage(f.name)) {
+    const pv = document.getElementById(previewMap[mediaPickerTarget]);
+    if (pv) { pv.src = f.url; pv.style.display = 'block'; }
+  }
+  closeModal('mediaPickerModal');
+  showToast('File selected!');
 }
 
-function genSchema() {
-  const type   = (document.getElementById('schemaType') || {}).value || 'Article';
-  const title  = document.getElementById('postTitle').value || '';
-  const desc   = document.getElementById('metaDesc').value || document.getElementById('postExcerpt').value || '';
-  const author = document.getElementById('postAuthor').value || 'Web3Legals Team';
-  const schema = {
-    '@context': 'https://schema.org', '@type': type,
-    headline: title, description: desc,
-    author: { '@type': 'Person', name: author },
-    publisher: { '@type': 'Organization', name: 'Web3Legals', url: 'https://web3legals.com' },
-    datePublished: new Date().toISOString().split('T')[0]
-  };
-  const el = document.getElementById('schemaOut'); if (el) el.textContent = JSON.stringify(schema, null, 2);
+function fileIconHtml(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const icons = {pdf:'📄',doc:'📃',docx:'📃',xls:'📊',xlsx:'📊',ppt:'📋',pptx:'📋',zip:'🗜',svg:'🎨',gif:'🎞',mp4:'🎬',mp3:'🎵'};
+  return `<span style="font-size:2rem;">${icons[ext]||'📁'}</span>`;
+}
+function fileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const icons = {pdf:'📄',doc:'📃',docx:'📃',xls:'📊',xlsx:'📊',ppt:'📋',pptx:'📋',zip:'🗜',svg:'🎨',gif:'🎞'};
+  return icons[ext]||'📁';
+}
+function isImage(name) { return /\.(png|jpe?g|webp|gif|svg)$/i.test(name); }
+function ext2type(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const map = {pdf:'application/pdf',doc:'application/msword',zip:'application/zip',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',svg:'image/svg+xml',gif:'image/gif'};
+  return map[ext]||'application/octet-stream';
 }
 
-function updateOG() {
-  const title = document.getElementById('ogTitle').value || document.getElementById('seoTitle').value || document.getElementById('postTitle').value || '';
-  const desc  = document.getElementById('ogDesc').value  || document.getElementById('metaDesc').value  || document.getElementById('postExcerpt').value || '';
-  const img   = document.getElementById('ogImg').value   || document.getElementById('featImgUrl').value || '';
-  document.getElementById('ogTitlePrev').textContent = title || 'Post title';
-  document.getElementById('ogDescPrev').textContent  = desc  || 'Post description';
-  const imgEl = document.getElementById('ogImgPrev');
-  if (img) { imgEl.style.backgroundImage = `url(${img})`; imgEl.style.backgroundSize = 'cover'; imgEl.textContent = ''; }
-  else     { imgEl.style.backgroundImage = ''; imgEl.textContent = 'No image set'; }
-}
-
-// ── SECRETS ──────────────────────────────────────────────────────────────────
-function renderSecrets() {
-  const secrets = getSecrets(); const list = document.getElementById('secretsList');
-  if (!secrets.length) { list.innerHTML = '<p style="color:var(--white-muted);">No secrets stored. Add API keys for automation tools.</p>'; return; }
-  list.innerHTML = secrets.map((s, i) => `
-    <div class="secret-row">
-      <div style="flex:1;">
-        <strong style="color:var(--white);font-size:0.9rem;display:block;">${s.key}</strong>
-        ${s.desc ? `<span style="font-size:0.75rem;color:var(--white-muted);">${s.desc}</span>` : ''}
+/* ───────────────────────────────────
+   AUTHORS
+─────────────────────────────────── */
+function renderAuthors() {
+  const authors = getAuthors();
+  const grid    = document.getElementById('authorsList');
+  const empty   = document.getElementById('authorsEmpty');
+  if (!authors.length) { grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+  grid.innerHTML = authors.map((a, i) => `
+    <div class="author-card">
+      <div class="author-avatar">
+        ${a.photo ? `<img src="${a.photo}" alt="${esc(a.name)}" onerror="this.style.display='none'">` : esc(a.name.charAt(0).toUpperCase())}
       </div>
-      <div class="secret-val" id="sv${i}">••••••••••••••••</div>
-      <button onclick="toggleSecret(${i})" class="btn btn-ghost" style="padding:0.4rem 0.75rem;font-size:0.75rem;">👁</button>
-      <button onclick="copySecret(${i})" class="btn btn-outline" style="padding:0.4rem 0.75rem;font-size:0.75rem;">Copy</button>
-      <button onclick="deleteSecret(${i})" style="background:none;border:none;color:#e74c3c;cursor:pointer;">🗑</button>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:600;font-size:0.95rem;color:var(--white);">${esc(a.name)}</div>
+        ${a.designation ? `<div style="font-size:0.8rem;color:var(--gold);margin-top:2px;">${esc(a.designation)}</div>` : ''}
+        ${a.bio ? `<p style="font-size:0.8rem;color:var(--white-muted);margin-top:0.5rem;line-height:1.5;">${esc(a.bio)}</p>` : ''}
+        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+          ${a.linkedin?`<a href="${a.linkedin}" target="_blank" class="btn btn-ghost btn-sm" style="font-size:0.72rem;">LinkedIn</a>`:''}
+          ${a.twitter?`<a href="${a.twitter}" target="_blank" class="btn btn-ghost btn-sm" style="font-size:0.72rem;">X</a>`:''}
+          ${a.website?`<a href="${a.website}" target="_blank" class="btn btn-ghost btn-sm" style="font-size:0.72rem;">Website</a>`:''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0;">
+        <button onclick="editAuthor(${i})" class="btn btn-ghost btn-sm">Edit</button>
+        <button onclick="confirmDelete('Delete author?','Delete &ldquo;${esc(a.name)}&rdquo;?',()=>deleteAuthor(${i}))" class="btn btn-danger btn-sm">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function openAuthorModal(idx) {
+  const isEdit = idx !== undefined;
+  document.getElementById('authorModalTitle').textContent = isEdit ? 'Edit Author' : 'Add Author';
+  document.getElementById('editAuthorIdx').value = isEdit ? idx : '';
+  if (isEdit) {
+    const a = getAuthors()[idx];
+    document.getElementById('authorName').value       = a.name;
+    document.getElementById('authorTitle').value      = a.designation||'';
+    document.getElementById('authorPhoto').value      = a.photo||'';
+    document.getElementById('authorEmail').value      = a.email||'';
+    document.getElementById('authorBio').value        = a.bio||'';
+    document.getElementById('authorLinkedin').value   = a.linkedin||'';
+    document.getElementById('authorTwitter').value    = a.twitter||'';
+    document.getElementById('authorWeb').value        = a.website||'';
+  } else {
+    ['authorName','authorTitle','authorPhoto','authorEmail','authorBio','authorLinkedin','authorTwitter','authorWeb'].forEach(id => document.getElementById(id).value='');
+  }
+  document.getElementById('authorModal').classList.add('open');
+}
+
+function editAuthor(i) { openAuthorModal(i); }
+function deleteAuthor(i) {
+  const a = getAuthors(); a.splice(i,1); saveAuthors(a); renderAuthors();
+  showToast('Author deleted.', 'error');
+}
+
+function saveAuthor() {
+  const name = document.getElementById('authorName').value.trim();
+  if (!name) { showToast('Name is required.', 'error'); return; }
+  const authors = getAuthors();
+  const idx     = document.getElementById('editAuthorIdx').value;
+  const author  = {
+    name,
+    designation: document.getElementById('authorTitle').value,
+    photo:       document.getElementById('authorPhoto').value,
+    email:       document.getElementById('authorEmail').value,
+    bio:         document.getElementById('authorBio').value,
+    linkedin:    document.getElementById('authorLinkedin').value,
+    twitter:     document.getElementById('authorTwitter').value,
+    website:     document.getElementById('authorWeb').value
+  };
+  if (idx !== '') { authors[parseInt(idx)] = author; } else { authors.push(author); }
+  saveAuthors(authors); renderAuthors();
+  closeModal('authorModal');
+  showToast('Author saved! ✓');
+}
+
+function populateAuthorSelect(selectId) {
+  const sel = document.getElementById(selectId);
+  const cur = sel.value;
+  const authors = getAuthors();
+  sel.innerHTML = '<option value="">— No Author —</option>' +
+    authors.map(a => `<option value="${esc(a.name)}">${esc(a.name)}</option>`).join('');
+  sel.value = cur;
+}
+
+/* ───────────────────────────────────
+   CONTACT MESSAGES
+─────────────────────────────────── */
+let msgFilter = 'all';
+let msgSearchQ = '';
+
+function setMsgFilter(f, btn) {
+  msgFilter = f;
+  document.querySelectorAll('.filter-bar .filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMessages();
+}
+function filterMessages() {
+  msgSearchQ = document.getElementById('msgSearch').value.toLowerCase();
+  renderMessages();
+}
+
+function renderMessages() {
+  let msgs = getMessages();
+  if (msgFilter === 'unread') msgs = msgs.filter(m => !m.read);
+  if (msgFilter === 'read')   msgs = msgs.filter(m => m.read);
+  if (msgSearchQ) msgs = msgs.filter(m =>
+    (m.name||'').toLowerCase().includes(msgSearchQ) ||
+    (m.email||'').toLowerCase().includes(msgSearchQ) ||
+    (m.subject||'').toLowerCase().includes(msgSearchQ) ||
+    (m.message||'').toLowerCase().includes(msgSearchQ));
+
+  const list = document.getElementById('messagesList');
+  if (!msgs.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">No messages</div><div class="empty-sub">${msgSearchQ||msgFilter!=='all'?'No messages match your filter.':'No contact messages yet.'}</div></div>`;
+    return;
+  }
+
+  const allMsgs = getMessages();
+  list.innerHTML = msgs.map(m => {
+    const i = allMsgs.findIndex(x => x._id === m._id);
+    return `
+    <div class="msg-row ${m.read?'':'unread'}" onclick="openMessage(${i})">
+      <div class="msg-dot ${m.read?'read':''}"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+          <span style="font-size:0.875rem;font-weight:${m.read?'400':'600'};color:var(--white);">${esc(m.name)}</span>
+          <span style="font-size:0.75rem;color:var(--white-muted);flex-shrink:0;">${m.date||''}</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--white-dim);margin-top:2px;">${esc(m.subject||'No subject')}</div>
+        <div style="font-size:0.78rem;color:var(--white-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc((m.message||'').substring(0,100))}</div>
+      </div>
+    </div>`;
+  }).join('');
+  updateBadges();
+}
+
+function openMessage(i) {
+  const msgs = getMessages();
+  const m = msgs[i];
+  if (!m) return;
+  if (!m.read) { msgs[i].read = true; saveMessages(msgs); renderMessages(); updateBadges(); renderDashboard(); }
+
+  document.getElementById('msgModalBody').innerHTML = `
+    <div style="margin-bottom:1.25rem;">
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-bottom:0.75rem;">
+        <span style="font-size:1rem;font-weight:600;">${esc(m.name)}</span>
+        <span style="font-size:0.82rem;color:var(--white-muted);">&lt;${esc(m.email)}&gt;</span>
+        <span style="font-size:0.78rem;color:var(--white-muted);margin-left:auto;">${m.date||''}</span>
+      </div>
+      ${m.subject ? `<div style="font-size:0.85rem;font-weight:600;color:var(--gold);margin-bottom:0.75rem;">Subject: ${esc(m.subject)}</div>` : ''}
+    </div>
+    <div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.25rem;font-size:0.875rem;line-height:1.7;white-space:pre-wrap;color:var(--white-dim);">${esc(m.message||'')}</div>`;
+
+  document.getElementById('msgDeleteBtn').onclick = () => {
+    closeModal('msgModal');
+    confirmDelete('Delete message?', `Delete the message from ${esc(m.name)}?`, () => {
+      const ms = getMessages(); ms.splice(i,1); saveMessages(ms);
+      renderMessages(); renderDashboard();
+      showToast('Message deleted.', 'error');
+    });
+  };
+  document.getElementById('msgModal').classList.add('open');
+}
+
+function openAddMsgModal() { document.getElementById('addMsgModal').classList.add('open'); }
+
+function addMessage() {
+  const name    = document.getElementById('newMsgName').value.trim();
+  const email   = document.getElementById('newMsgEmail').value.trim();
+  const message = document.getElementById('newMsgBody').value.trim();
+  if (!name || !message) { showToast('Name and message required.', 'error'); return; }
+  const msgs = getMessages();
+  msgs.unshift({
+    _id:     Date.now() + Math.random().toString(36).slice(2),
+    name, email,
+    subject: document.getElementById('newMsgSubject').value.trim(),
+    message,
+    date:    new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+    read:    false
+  });
+  saveMessages(msgs);
+  ['newMsgName','newMsgEmail','newMsgSubject','newMsgBody'].forEach(id => document.getElementById(id).value='');
+  renderMessages(); renderDashboard(); updateBadges();
+  closeModal('addMsgModal');
+  showToast('Message added! ✓');
+}
+
+/* ───────────────────────────────────
+   API KEYS / SECRETS
+─────────────────────────────────── */
+const SERVICE_KEY_NAMES = {
+  OpenAI:'OPENAI_API_KEY', 'Claude':'ANTHROPIC_API_KEY', Gemini:'GEMINI_API_KEY',
+  Cloudflare:'CF_API_TOKEN', GitHub:'GITHUB_TOKEN', SMTP:'SMTP_PASSWORD'
+};
+
+function autoFillKeyName() {
+  const svc = document.getElementById('secretService').value;
+  if (svc && SERVICE_KEY_NAMES[svc]) {
+    document.getElementById('secretKey').value = SERVICE_KEY_NAMES[svc];
+  }
+}
+
+function renderSecrets() {
+  const secrets = getSecrets();
+  const list    = document.getElementById('secretsList');
+  if (!secrets.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">🔑</div><div class="empty-title">No API keys stored</div><div class="empty-sub">Add your first API key to get started with integrations.</div><button class="btn btn-gold" onclick="openSecretModal()">+ Add Key</button></div>';
+    return;
+  }
+  list.innerHTML = secrets.map((s, i) => `
+    <div class="data-row">
+      <div class="row-icon">🔑</div>
+      <div class="row-main">
+        <div class="row-title">${esc(s.key)}</div>
+        ${s.desc ? `<div class="row-sub">${esc(s.desc)}</div>` : ''}
+        ${s.service ? `<div class="row-sub" style="color:var(--gold);font-size:0.72rem;">${esc(s.service)}</div>` : ''}
+      </div>
+      <div class="key-value" id="sv${i}">••••••••••••••••</div>
+      <div class="row-actions">
+        <button onclick="toggleSecret(${i})" class="btn btn-ghost btn-sm" title="Toggle visibility">👁</button>
+        <button onclick="copySecret(${i})" class="btn btn-outline btn-sm">Copy</button>
+        <button onclick="editSecret(${i})" class="btn btn-ghost btn-sm">Edit</button>
+        <button onclick="confirmDelete('Delete key?','Delete the key &ldquo;${esc(s.key)}&rdquo;?',()=>deleteSecret(${i}))" class="btn btn-icon" style="background:none;border:none;color:var(--red);">🗑</button>
+      </div>
     </div>`).join('');
 }
 
 function toggleSecret(i) {
-  const el = document.getElementById('sv' + i); const s = getSecrets()[i];
-  el.textContent = el.textContent === s.value ? '••••••••••••••••' : s.value;
+  const el = document.getElementById('sv' + i);
+  const s  = getSecrets()[i];
+  el.textContent = el.textContent.startsWith('•') ? s.value : '••••••••••••••••';
 }
 
-function copySecret(i) { navigator.clipboard.writeText(getSecrets()[i].value).then(() => showToast('Copied to clipboard')); }
+function copySecret(i) {
+  navigator.clipboard.writeText(getSecrets()[i].value).then(() => showToast('Copied to clipboard!'));
+}
 
 function deleteSecret(i) {
-  if (!confirm('Delete this secret?')) return;
-  const s = getSecrets(); s.splice(i, 1); saveSecrets(s); renderSecrets();
+  const s = getSecrets(); s.splice(i,1); saveSecrets(s); renderSecrets();
+  showToast('Key deleted.', 'error');
 }
 
-function openSecretModal() { document.getElementById('secretModal').classList.add('open'); }
+function openSecretModal(idx) {
+  const isEdit = idx !== undefined;
+  document.getElementById('secretModalTitle').textContent = isEdit ? 'Edit API Key' : 'Add API Key';
+  document.getElementById('editSecretIdx').value = isEdit ? idx : '';
+  if (isEdit) {
+    const s = getSecrets()[idx];
+    document.getElementById('secretService').value = s.service || '';
+    document.getElementById('secretKey').value     = s.key;
+    document.getElementById('secretValue').value   = s.value;
+    document.getElementById('secretDesc').value    = s.desc || '';
+  } else {
+    ['secretService','secretKey','secretValue','secretDesc'].forEach(id => document.getElementById(id).value='');
+  }
+  document.getElementById('secretModal').classList.add('open');
+}
+
+function editSecret(i) { openSecretModal(i); }
 
 function saveSecret() {
-  const key = document.getElementById('secretKey').value.trim();
+  const key   = document.getElementById('secretKey').value.trim();
   const value = document.getElementById('secretValue').value.trim();
-  if (!key || !value) { alert('Key and value required.'); return; }
+  if (!key||!value) { showToast('Key name and value required.', 'error'); return; }
   const secrets = getSecrets();
-  secrets.push({ key, value, desc: document.getElementById('secretDesc').value });
-  saveSecrets(secrets); renderSecrets(); closeModal('secretModal');
-  ['secretKey','secretValue','secretDesc'].forEach(id => document.getElementById(id).value = '');
-  showToast('Secret saved!');
+  const idx     = document.getElementById('editSecretIdx').value;
+  const secret  = {
+    service: document.getElementById('secretService').value,
+    key, value,
+    desc: document.getElementById('secretDesc').value
+  };
+  if (idx !== '') { secrets[parseInt(idx)] = secret; } else { secrets.push(secret); }
+  saveSecrets(secrets); renderSecrets();
+  closeModal('secretModal');
+  showToast('API key saved! ✓');
 }
 
-// ── SETTINGS ─────────────────────────────────────────────────────────────────
-function saveSettings() {
-  lss('w3l_settings', {
-    siteName:     document.getElementById('siteNameInput').value,
-    siteUrl:      document.getElementById('siteUrlInput').value,
-    contactEmail: document.getElementById('contactEmailInput').value
+/* ───────────────────────────────────
+   WEBSITE SETTINGS
+─────────────────────────────────── */
+const SETTINGS_FIELDS = [
+  's-siteName','s-siteUrl','s-contactEmail','s-phone','s-address','s-logo','s-favicon',
+  's-metaTitle','s-metaDesc','s-ogImage',
+  's-linkedin','s-twitter','s-facebook','s-youtube','s-github',
+  's-gaId','s-gtmId','s-gscToken',
+  's-smtpHost','s-smtpPort','s-smtpUser','s-smtpPass',
+  's-workerUrl','s-cdnUrl'
+];
+
+function loadSettings() {
+  const cfg = getSettings();
+  SETTINGS_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    const key = id.replace('s-','').replace(/-([a-z])/g, (_,c)=>c.toUpperCase());
+    if (el && cfg[key] !== undefined) el.value = cfg[key];
   });
-  showToast('Settings saved!');
+}
+
+function saveSettings() {
+  const cfg = getSettings();
+  SETTINGS_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const key = id.replace('s-','').replace(/-([a-z])/g, (_,c)=>c.toUpperCase());
+    cfg[key] = el.value;
+  });
+  S.set('w3l_settings', cfg);
+  showToast('Settings saved! ✓');
+}
+
+function showSettingsTab(name, btn) {
+  document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('settings-' + name).classList.add('active');
+  document.querySelectorAll('.settings-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
 async function changePw() {
   const cur  = document.getElementById('curPw').value;
   const newp = document.getElementById('newPw').value;
   const conf = document.getElementById('confPw').value;
-  if (newp !== conf)   { alert('New passwords do not match.'); return; }
-  if (newp.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  if (!cur||!newp||!conf) { showToast('All fields required.', 'error'); return; }
+  if (newp !== conf) { showToast('New passwords do not match.', 'error'); return; }
+  if (newp.length < 8) { showToast('Minimum 8 characters required.', 'error'); return; }
   const curHash = await sha256(cur);
-  if (curHash !== localStorage.getItem('w3l_pw_hash')) { alert('Current password incorrect.'); return; }
+  if (curHash !== localStorage.getItem('w3l_pw_hash')) { showToast('Current password is incorrect.', 'error'); return; }
   localStorage.setItem('w3l_pw_hash', await sha256(newp));
-  ['curPw','newPw','confPw'].forEach(id => document.getElementById(id).value = '');
-  showToast('Password updated!');
+  ['curPw','newPw','confPw'].forEach(id => document.getElementById(id).value='');
+  showToast('Password updated! ✓');
 }
 
 function clearAllData() {
-  if (!confirm('This will delete ALL CMS data. Are you absolutely sure?')) return;
-  if (!confirm('Last warning — this cannot be undone. Clear everything?')) return;
-  ['w3l_posts','w3l_pages','w3l_media','w3l_secrets','w3l_settings','w3l_redirects'].forEach(k => localStorage.removeItem(k));
-  renderPosts(); renderPages(); renderSecrets(); renderMedia(); renderRedirects();
-  showToast('All data cleared.');
+  confirmDelete(
+    'Clear all CMS data?',
+    'This will permanently delete ALL posts, pages, research papers, media, authors, messages, and settings. This action cannot be undone.',
+    () => {
+      ['w3l_posts','w3l_pages','w3l_research','w3l_media','w3l_authors','w3l_messages','w3l_secrets','w3l_settings']
+        .forEach(k => S.del(k));
+      bootCMS();
+      showToast('All data cleared.');
+    }
+  );
 }
 
-// ── UTILS ────────────────────────────────────────────────────────────────────
+/* ───────────────────────────────────
+   UTILS
+─────────────────────────────────── */
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-function showToast(msg) {
-  let t = document.querySelector('.toast');
-  if (!t) {
-    t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t);
-    t.style.cssText = 'position:fixed;bottom:2rem;right:2rem;background:var(--gold);color:#111;padding:0.65rem 1.25rem;border-radius:var(--radius);font-size:0.82rem;font-weight:600;opacity:0;transform:translateY(20px);transition:all 0.3s;z-index:9999;pointer-events:none';
-  }
-  t.textContent = msg; t.style.opacity = '1'; t.style.transform = 'translateY(0)';
-  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(20px)'; }, 3000);
+function showToast(msg, type) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast' + (type ? ' toast-' + type : ' toast-success');
+  const icons = { error:'❌', success:'✅' };
+  t.innerHTML = `<span>${icons[type]||'✓'}</span> ${msg}`;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3000);
 }
 
-function slugify(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
-function autoSlug() { const sl = document.getElementById('postSlug'); if (sl && !sl._m) sl.value = slugify(document.getElementById('postTitle').value); }
-function calcRT(t)  { return Math.ceil(((t || '').trim().split(/\s+/).length) / 200) + ' min read'; }
-function fmtSize(b) { if (b < 1024) return b + 'B'; if (b < 1048576) return (b/1024).toFixed(1) + 'KB'; return (b/1048576).toFixed(1) + 'MB'; }
+function confirmDelete(title, msg, onConfirm) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').innerHTML = msg;
+  document.getElementById('confirmOkBtn').onclick = () => { closeModal('confirmModal'); onConfirm(); };
+  document.getElementById('confirmModal').classList.add('open');
+}
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); if (document.getElementById('postModal').classList.contains('open')) savePost(); }
-});
+function encodeTitle(t) { return t.replace(/'/g,"\\'"); }
+function esc(str) { if (!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function slugify(str) { return str.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+
+function autoSlug(fromId, toId) {
+  const titleEl = document.getElementById(fromId);
+  const slugEl  = document.getElementById(toId);
+  if (!slugEl.dataset.manual) slugEl.value = slugify(titleEl.value);
+}
 document.addEventListener('DOMContentLoaded', () => {
-  const sl = document.getElementById('postSlug'); if (sl) sl.addEventListener('input', () => { sl._m = true; });
+  ['postSlug','pageSlug'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => el.dataset.manual = el.value ? '1' : '');
+  });
+});
+
+function execCmd(cmd, val) {
+  document.getElementById('postBody').focus();
+  document.execCommand(cmd, false, val || null);
+}
+
+function insertLink() {
+  const url = prompt('Enter URL:');
+  if (url) execCmd('createLink', url);
+}
+
+function updateBadges() {
+  const posts   = getPosts().length;
+  const msgs    = getMessages().filter(m => !m.read).length;
+  const research= getResearch().length;
+
+  const pb = document.getElementById('badge-posts');
+  pb.textContent = posts; pb.style.display = posts ? 'inline-block' : 'none';
+
+  const mb = document.getElementById('badge-messages');
+  mb.textContent = msgs; mb.style.display = msgs ? 'inline-block' : 'none';
+
+  const rb = document.getElementById('badge-research');
+  rb.textContent = research; rb.style.display = research ? 'inline-block' : 'none';
+}
+
+/* ── KEYBOARD SHORTCUTS ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const open = document.querySelector('.modal-overlay.open');
+    if (open) open.classList.remove('open');
+  }
+});
+
+/* ── IMAGE PREVIEW WATCHERS ── */
+function setupImagePreview(inputId, imgId) {
+  const input = document.getElementById(inputId);
+  const img   = document.getElementById(imgId);
+  if (!input||!img) return;
+  input.addEventListener('input', () => {
+    const url = input.value.trim();
+    if (url && /^https?:\/\//.test(url)) { img.src=url; img.style.display='block'; }
+    else img.style.display='none';
+  });
+}
+
+/* ── INIT on DOM ready ── */
+document.addEventListener('DOMContentLoaded', () => {
+  setupImagePreview('postFeaturedImage','postFeaturedPreview');
+  setupImagePreview('researchCover','researchCoverPreview');
 });
 </script>
 </body>
